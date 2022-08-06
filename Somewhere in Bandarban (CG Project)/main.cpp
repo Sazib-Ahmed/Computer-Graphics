@@ -3988,10 +3988,10 @@ void cover() {
     renderBitmapString(676, 810, 0.0f, GLUT_BITMAP_HELVETICA_18, "ID                                 Name                                                 Contribution ");
     renderBitmapString(676, 756, 0.0f, GLUT_BITMAP_HELVETICA_18, "19-39783-1                Mahmud Hossain Tushar                          16.5% ");
     renderBitmapString(676, 702, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-42076-1                MD. Sazib Ahmed                                    16.5% ");
-    renderBitmapString(676, 648, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-42226-1                Shariar Alam                                             16.5% ");
-    renderBitmapString(676, 594, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-43256-1                Muhammad Intisar Mahmud                    16.5% ");
-    renderBitmapString(676, 540, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-43479-1                MD. Shah Jalal                                        16.5% ");
-    renderBitmapString(676, 486, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-43502-1                Pulok Kanti Paul                                      16.5% ");
+    renderBitmapString(676, 648, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-42226-1                Shahariar Alam                                          16.5% ");
+    renderBitmapString(676, 594, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-43256-1                Muhammad Intisar Mahmud                     16.5% ");
+    renderBitmapString(676, 540, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-43479-1                MD. Shah Jalal                                         16.5% ");
+    renderBitmapString(676, 486, 0.0f, GLUT_BITMAP_HELVETICA_18, "20-43502-1                Pulok Kanti Paul                                       16.5% ");
     renderBitmapString(860, 270, 0.0f, GLUT_BITMAP_HELVETICA_18, "Submitted to");
     renderBitmapString(860, 216, 0.0f, GLUT_BITMAP_HELVETICA_18, "MAHFUJUR RAHAMAN");
     renderBitmapString(860, 189, 0.0f, GLUT_BITMAP_HELVETICA_12, "FACULTY OF SCIENCE & TECHNOLOGY");

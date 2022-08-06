@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1659747249 source:e:\8th semester\computer graphics [a]\project\somewhere in bandarban (cg project)\main.cpp
+	<iostream>
+	<GL/gl.h>
+	<GL/glut.h>
+	<windows.h>
+	<cstdio>
+	<GL/gl.h>
+	<math.h>
+	<stdlib.h>
+	<vector>
+

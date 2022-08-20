@@ -9,6 +9,8 @@
 #include<stdlib.h>
 #include <mmsystem.h>
 #include <MMSystem.h>
+eeeee
+
 
  // GLUT, include glu.h and gl.h
 #include <vector>
@@ -28,6 +30,7 @@ void renderBitmapString(float x, float y, float z, void *font, char *string) {
 
 GLfloat position = 0;
 GLfloat speed = 1;
+GLfloat position_raft= 10;
 
 GLfloat water_shade_position1 = 0, water_shade_position2 = 0, water_shade_position3 = 0, water_shade_position4 = 0, water_shade_position5 = 0, water_shade_position6 = 0;
 GLfloat water_shade_speed = 1;
@@ -92,19 +95,144 @@ void update(int value)
     glutTimerFunc(20, update, 0);
 }
 
-void circle(float x, float y, float radius, float height)//, float r, float g, float b)
+void circle(float x, float y, float radius, float height)
 {
     int triangleAmount = 360;
-    //glBegin(GL_TRIANGLE_FAN);
-    //glColor3f(rf,gf,1.0f);
-
-    //glColor3ub(color.r, color.g, color.b);
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(x, y); // center of circle
     for (int i = 0; i <= 360; i++)
         glVertex2f(x + (radius * cos(i * 2 * 3.1416 / triangleAmount)), y + (height * sin(i * 2 * 3.1416 / triangleAmount)));
     glEnd();
 }
+
+void tree_type1(float x, float y, float height,float r1, float g1, float b1,float r2, float g2, float b2,float r3, float g3, float b3)
+{
+    //int triangleAmount = 360;
+
+    int block = round(height/11);
+    int half_block = round((height/11)/2);
+
+
+    glColor3f(r1,g1,b1);
+    circle((x-(2*block)),(y+(6*block)),(3*block),(3*block));
+    circle((x+(2*block)),(y+(6*block)),(3*block),(3*block));
+    circle(x,(y+(9*block)-half_block),(3*block),(3*block));
+
+    glColor3f(r2,g2,b2);
+    circle((x-(2*block)),(y+(5*block)),(2*block),(2*block));
+    circle(x , (y+(7*block)),(2*block),(2*block));
+    circle((x+(2*block)),(y+(5*block)),(2*block),(2*block));
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(r3,g3,b3);
+    glVertex2f(x , (y+(6*block)));
+    glVertex2f((x-half_block) ,y);
+    glVertex2f((x+half_block) ,y);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f((x-(2*block)), (y+(5*block)));
+    glVertex2f(x , (y+(4*block)-half_block));
+    glVertex2f(x , (y+(3*block)-half_block));
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f((x+(2*block)), (y+(5*block)));
+    glVertex2f(x , (y+(4*block)-half_block));
+    glVertex2f(x , (y+(3*block)-half_block));
+    glEnd();
+}
+
+
+
+
+void tree_type2(float x, float y, float height,float r1, float g1, float b1,float r2, float g2, float b2,float r3, float g3, float b3)
+{
+    //int triangleAmount = 360;
+
+    int block = round(height/11);
+    int half_block = round((height/11)/2);
+
+
+    glColor3f(r1,g1,b1);
+    circle((x-(3*block)), (y+(6*block)-half_block),(half_block+2*block),(half_block+2*block));
+    glColor3f(r2,g2,b2);
+    circle(x , (y+(9*block)),(half_block+2*block),(half_block+2*block));
+    circle(x+((3*block)) , (y+(8*block)),(half_block+block),(half_block+block));
+    circle(x , (y+(5*block)),(2*block),(2*block));
+    circle(x , (y+(7*block)),(2*block),(2*block));
+    circle((x-(3*block)+half_block), (y+(6*block)),(half_block+2*block),(half_block+2*block));
+    circle((x+(4*block)-half_block),(y+(5*block)+half_block),(half_block+2*block),(half_block+2*block));
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(r3,g3,b3);
+    glVertex2f(x , (y+(9*block)));
+    glVertex2f((x-half_block) ,y);
+    glVertex2f((x+half_block) ,y);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f((x-(3*block)), (y+(6*block)));
+    glVertex2f(x , (y+(4*block)-half_block));
+    glVertex2f(x , (y+(3*block)-half_block));
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f((x+(2*block)), (y+(5*block)));
+    glVertex2f(x , (y+(4*block)-half_block));
+    glVertex2f(x , (y+(3*block)-half_block));
+    glEnd();
+}
+
+
+
+void tree_type3(float x, float y, float height,float r1, float g1, float b1,float r2, float g2, float b2,float r3, float g3, float b3)
+{
+    //int triangleAmount = 360;
+
+    int block = round(height/11);
+    int half_block = round((height/11)/2);
+
+
+    glColor3f(r2,g2,b2);
+
+    circle((x-(2*block)-half_block),(y+(7*block)),(2*block)-half_block,(2*block)-half_block);
+    circle((x-(2*block)), (y+(4*block)),(1*block),(1*block));
+    circle((x-(1*block)),(y+(5*block)-half_block),(half_block),(half_block));
+    circle((x-(3*block)),(y+(4*block)),(half_block),(half_block));
+    circle((x-(3*block)+half_block),(y+(5*block)),(half_block),(half_block));
+
+
+    glColor3f(r1,g1,b1);
+    circle((x-(2*block)),(y+(7*block)+half_block),(2*block)-half_block,(2*block)-half_block);
+    circle((x+(1*block)+half_block),(y+(6*block)),(2*block)-half_block,(2*block)-half_block);
+    circle((x),(y+(6*block)),(2*block)-half_block,(2*block)-half_block);
+
+    circle((x+(2*block)+half_block),(y+(8*block)),(1*block),(1*block));
+    circle((x+(1*block)),(y+(7*block)),(2*block)-half_block,(2*block)-half_block);
+
+    circle(x-block,(y+(9*block)-half_block),(2*block)-half_block,(2*block)-half_block);
+    circle(x+block,(y+(9*block)+half_block),(2*block)-half_block,(2*block)-half_block);
+
+
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(r3,g3,b3);
+    glVertex2f(x , (y+(8*block)));
+    glVertex2f((x-half_block) ,y);
+    glVertex2f((x+half_block) ,y);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glVertex2f((x-(2*block)), (y+(4*block)));
+    glVertex2f(x , (y+(3*block)-half_block));
+    glVertex2f(x , (y+(2*block)-half_block));
+    glEnd();
+}
+
 
 
 void filledCircle(float c1, float c2, float r, float x, float y, float z)
@@ -992,7 +1120,7 @@ void day() {
     mountain1_shadow_2();
 
     //Mountain1 Shadow 3
-    mountain1_shadow_2();
+    mountain1_shadow_3();
 
     //Mountain 2
     glColor3f(0.18f,0.8f,0.45f);
@@ -1006,6 +1134,38 @@ void day() {
     //Mountain 3 front land
     glColor3f(0.0f,0.6f,0.26f);
     mountain_front_land();
+
+
+    //Tree type 1 on mountain
+    tree_type1(885, 513, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type1(550, 490, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type1(1700, 425, 80,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type1(540, 604, 40,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type1(355, 613, 40,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type1(1650, 630, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type1(830, 737, 20,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type2(995, 504, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+
+    tree_type2(1528, 607, 60,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(1083, 515, 67,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(421, 478, 70,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(731, 540, 40,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(1559, 692, 20,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(1216,703, 30,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(1880,100, 400,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+
+    tree_type3(1774, 627, 70,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(1600, 616, 70,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(636, 489, 75,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(1339, 606, 70,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(380,653, 20,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(297,617, 40,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(1216,703, 30,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(995, 504, 65,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type3(350, 468, 70,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+
+
+
 
     //House 1 on mountain 3////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
@@ -1917,6 +2077,9 @@ glVertex2f(1874, 737);
     glVertex2f(0,0);glVertex2f(0,300);glVertex2f(1920,300);glVertex2f(1920,0);
     glEnd();
 
+    //Trees on mountain front
+    tree_type1(1700, 425, 75,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+
     //ALL land shades
     glColor3f(0.69f,1.0f,0.53f);
     land_shade();
@@ -1984,7 +2147,7 @@ glVertex2f(1874, 737);
     glLineWidth(2);
 
     glPushMatrix();
-    glTranslatef(-position,0,0);
+    glTranslatef(-position,-position_raft,0);
     //Bamboo raft
     glBegin(GL_POLYGON);
     glColor3f(0.22f,0.45f,0.0f);
@@ -2039,6 +2202,8 @@ glVertex2f(1874, 737);
     //Mountain 5 (River front Mountain)
     glColor3f(0.0f,0.6f,0.26f);
     mountain5();
+
+
 
 
 
@@ -2230,6 +2395,18 @@ glVertex2f(1874, 737);
     glBegin(GL_POLYGON);
     glColor3f(0.49,0.25,0.0f);
     right_tree_branch();
+
+
+
+
+
+    tree_type1(1910,90, 450,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
+    tree_type3(1590, 270, 275,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
+    tree_type2(1350, 200, 300,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    //tree_type2(1910,90, 450,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+
+
+
 
 
 

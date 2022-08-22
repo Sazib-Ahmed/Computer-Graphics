@@ -29,6 +29,8 @@ void renderBitmapString(float x, float y, float z, void *font, char *string) {
         glutBitmapCharacter(font, *c);
     }
 }
+
+
 bool tower_light=true;
 GLfloat counter_position=0;
 GLfloat counter_speed=1.5;
@@ -44,15 +46,17 @@ GLfloat cloud_light_speed=1;
 
 bool mountain1_light=false,mountain1_shadow_light=false,mountain2_shadow_light=false,mountain3_shadow_light=false;
 
-
-
 GLfloat position = 0;
 GLfloat plane_position= 0;
 GLfloat raft_position= 0;
 GLfloat speed = 1;
-GLfloat plane_speed= .7;
+GLfloat plane_speed= 3;
 GLfloat raft_speed= 1;
 GLfloat position_raft= 10;
+GLfloat waterfall_on_river_speed= .7;
+GLfloat waterfall_on_river_position= -20;
+
+
 
 GLfloat water_shade_position1 = 0, water_shade_position2 = 0, water_shade_position3 = 0, water_shade_position4 = 0, water_shade_position5 = 0, water_shade_position6 = 0;
 GLfloat water_shade_speed = 1;
@@ -80,18 +84,19 @@ GLfloat bird_wing_speed= .2;
 GLfloat sun_position_x=0;
 GLfloat sun_position_y=0;
 
+GLfloat moon_position_x=0;
+GLfloat moon_position_y=0;
+GLfloat moon_speed = .1;
+
 
 void update(int value)
 {
 
-    if(plane_position > 1920) plane_position = 0;
+    if(plane_position > 3000) plane_position = 0;
     plane_position += plane_speed;
 
     if(raft_position > 1920) raft_position = 0;
     raft_position += raft_speed;
-
-
-
 
     if(waterfall_shade_position1 > 103) waterfall_shade_position1 = 0;
     waterfall_shade_position1 += speed1;
@@ -102,17 +107,17 @@ void update(int value)
     if(waterfall_shade_position3 > 50) waterfall_shade_position3 = 0;
     waterfall_shade_position3 += speed1;
 
+
+    if(waterfall_on_river_position > 1) waterfall_on_river_position = -10;
+    waterfall_on_river_position += waterfall_on_river_speed;
+
+
     if(smoke_position1 > 8) smoke_position1 = 0;
     smoke_position1 += smoke_speed1;
     if(smoke_position2 > 8) smoke_position2 = 0;
     smoke_position2 += smoke_speed2;
     if(smoke_position3 > 8) smoke_position3 = 0;
     smoke_position3 += smoke_speed3;
-
-
-
-
-
 
 
     if(water_shade_position1 > 1500) water_shade_position1 = -700;
@@ -134,7 +139,7 @@ void update(int value)
     water_shade_position6 += water_shade_speed;
 
 
-    if(cloud_position1 > 1900) cloud_position1 = -300;
+    if(cloud_position1 > 1950) cloud_position1 = -300;
     cloud_position1 += cloud_speed1;
 
     if(cloud_position2 > 1950) cloud_position2 = -150;
@@ -156,6 +161,11 @@ void update(int value)
 
     if(sun_position_x > 3100)sun_position_x = -5000;
     sun_position_x += speed;
+
+    if(moon_position_x >500)moon_position_x = -350;
+    moon_position_x += moon_speed;
+
+
 
 
     if(counter_position > 100){
@@ -191,28 +201,24 @@ void update(int value)
     }
     else {
             cloud1=false;
-            //mountain1_light=false;
     }
     if(cloud_light_position==300||cloud_light_position==303||cloud_light_position==306||cloud_light_position==310||cloud_light_position==315){
             cloud2=true;
     }
     else {
             cloud2=false;
-           // mountain1_light=false;
     }
     if(cloud_light_position==100||cloud_light_position==103||cloud_light_position==106||cloud_light_position==110||cloud_light_position==115){
             cloud3=true;
     }
     else {
             cloud3=false;
-            //mountain1_light=false;
     }
     if(cloud_light_position==430||cloud_light_position==433||cloud_light_position==436||cloud_light_position==440||cloud_light_position==445){
             cloud4=true;
     }
     else {
             cloud4=false;
-            //mountain1_light=false;
     }
 
     if(cloud_light_position==30||cloud_light_position==33||cloud_light_position==36||cloud_light_position==40||cloud_light_position==45||cloud_light_position==100||cloud_light_position==103||cloud_light_position==106||cloud_light_position==110||cloud_light_position==115||cloud_light_position==300||cloud_light_position==303||cloud_light_position==306||cloud_light_position==310||cloud_light_position==315||cloud_light_position==430||cloud_light_position==433||cloud_light_position==436||cloud_light_position==440||cloud_light_position==445){
@@ -231,12 +237,6 @@ void update(int value)
 
 
 
-
-    //bool cloud1=false,cloud2=false,cloud3=false,cloud4=false;
-//GLfloat cloud_light_position=0;
-//GLfloat cloud_light_speed=1;
-
-
     glutPostRedisplay();
     glutTimerFunc(20, update, 0);
 }
@@ -251,6 +251,7 @@ void circle(float x, float y, float radius, float height)
     glEnd();
 }
 
+//for circle with 2 color shade
 void moon(float x, float y, float radius, float height,float r1, float g1, float b1,float r2, float g2, float b2)
 {
     int triangleAmount = 360;
@@ -264,29 +265,21 @@ void moon(float x, float y, float radius, float height,float r1, float g1, float
 }
 
 
-//glColor3f(0.61f,0.98f,1f);
-
-//double x1,y1=0;
-
 void anti_clock_circle(float p, float q, float radius, float height, float angle)
 {
     int triangleAmount = 360;
     float a,b=0;
 
-    //x=(a*cos(angle)-b*sin(angle));
-    //y=(a*sin(angle)+b*cos(angle));
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(p+(a*cos(angle)-b*sin(angle)), q+(a*sin(angle)+b*cos(angle))); // center of circle
     for (int i = 0; i <= 360; i++){
-        //x=a*cos(angle)-b*sin(angle);
-        //y=a*sin(angle)+b*cos(angle);
-        //x1=(a + (radius * cos(i * 2 * 3.1416 / triangleAmount)));
-        //y1=(b + (height * sin(i * 2 * 3.1416 / triangleAmount)));
-        //x=((a + (radius * cos(i * 2 * 3.1416 / triangleAmount)))*cos(angle)-(b + (height * sin(i * 2 * 3.1416 / triangleAmount)))*sin(angle));
-        //y=((a + (radius * cos(i * 2 * 3.1416 / triangleAmount)))*sin(angle)+(b + (height * sin(i * 2 * 3.1416 / triangleAmount)))*cos(angle));
-        //glVertex2f(x + (radius * cos(i * 2 * 3.1416 / triangleAmount)), y + (height * sin(i * 2 * 3.1416 / triangleAmount)));
+        //x=a*cos(angle)-b*sin(angle);  //anti clock formula for x
+        //y=a*sin(angle)+b*cos(angle);  //anti clock formula for y
+        //x1=(a + (radius * cos(i * 2 * 3.1416 / triangleAmount))); //circle points formula with height for x
+        //y1=(b + (height * sin(i * 2 * 3.1416 / triangleAmount))); //circle points formula with height for y
+
+        //upper 4 line combine
         glVertex2f(p+((a + (radius * cos(i * 2 * 3.1416 / triangleAmount)))*cos(angle)-(b + (height * sin(i * 2 * 3.1416 / triangleAmount)))*sin(angle)), q+((a + (radius * cos(i * 2 * 3.1416 / triangleAmount)))*sin(angle)+(b + (height * sin(i * 2 * 3.1416 / triangleAmount)))*cos(angle)));
-        //
     }
     glEnd();
 }
@@ -298,7 +291,6 @@ void bezier_curve3(float x1, float y1, float x2, float y2,float x3, float y3)
     glVertex2f(((x1*pow((1-t),2))+x2*2*t*(1-t)+x3*pow(t,2)),((y1*pow((1-t),2))+y2*2*t*(1-t)+y3*pow(t,2)));
     for (int i = 0; i <=100 ; i++){
         t+=.01;
-        //cout<< "glVertex2f("<<round(((x1*pow((1-t),2))+x2*2*t*(1-t)+x3*pow(t,2)))<<round((y1*pow((1-t),2))+y2*2*t*(1-t)+y3*pow(t,2))<<endl;
         glVertex2f(((x1*pow((1-t),2))+x2*2*t*(1-t)+x3*pow(t,2)),((y1*pow((1-t),2))+y2*2*t*(1-t)+y3*pow(t,2)));
         glVertex2f(((x1*pow((1-t),2))+x2*2*t*(1-t)+x3*pow(t,2)),((y1*pow((1-t),2))+y2*2*t*(1-t)+y3*pow(t,2)));
     }
@@ -316,8 +308,9 @@ void bezier_curve4(float x1, float y1, float x2, float y2,float x3, float y3,flo
 }
 
 
-
+//function for moving birds
 void bird1(float x, float y){
+
     glLineWidth(1);
     glBegin(GL_LINES);
     glVertex2f(x,y);
@@ -337,11 +330,9 @@ void bird1(float x, float y){
 
 void tree_type1(float x, float y, float height,float r1, float g1, float b1,float r2, float g2, float b2,float r3, float g3, float b3)
 {
-    //int triangleAmount = 360;
 
     int block = round(height/11);
     int half_block = round((height/11)/2);
-
 
     glColor3f(r1,g1,b1);
     circle((x-(2*block)),(y+(6*block)),(3*block),(3*block));
@@ -352,7 +343,6 @@ void tree_type1(float x, float y, float height,float r1, float g1, float b1,floa
     circle((x-(2*block)),(y+(5*block)),(2*block),(2*block));
     circle(x , (y+(7*block)),(2*block),(2*block));
     circle((x+(2*block)),(y+(5*block)),(2*block),(2*block));
-
 
     glBegin(GL_TRIANGLES);
     glColor3f(r3,g3,b3);
@@ -375,15 +365,11 @@ void tree_type1(float x, float y, float height,float r1, float g1, float b1,floa
 }
 
 
-
-
 void tree_type2(float x, float y, float height,float r1, float g1, float b1,float r2, float g2, float b2,float r3, float g3, float b3)
 {
-    //int triangleAmount = 360;
 
     int block = round(height/11);
     int half_block = round((height/11)/2);
-
 
     glColor3f(r1,g1,b1);
     circle((x-(3*block)), (y+(6*block)-half_block),(half_block+2*block),(half_block+2*block));
@@ -394,7 +380,6 @@ void tree_type2(float x, float y, float height,float r1, float g1, float b1,floa
     circle(x , (y+(7*block)),(2*block),(2*block));
     circle((x-(3*block)+half_block), (y+(6*block)),(half_block+2*block),(half_block+2*block));
     circle((x+(4*block)-half_block),(y+(5*block)+half_block),(half_block+2*block),(half_block+2*block));
-
 
     glBegin(GL_TRIANGLES);
     glColor3f(r3,g3,b3);
@@ -420,11 +405,9 @@ void tree_type2(float x, float y, float height,float r1, float g1, float b1,floa
 
 void tree_type3(float x, float y, float height,float r1, float g1, float b1,float r2, float g2, float b2,float r3, float g3, float b3)
 {
-    //int triangleAmount = 360;
 
     int block = round(height/11);
     int half_block = round((height/11)/2);
-
 
     glColor3f(r2,g2,b2);
 
@@ -434,19 +417,14 @@ void tree_type3(float x, float y, float height,float r1, float g1, float b1,floa
     circle((x-(3*block)),(y+(4*block)),(half_block),(half_block));
     circle((x-(3*block)+half_block),(y+(5*block)),(half_block),(half_block));
 
-
     glColor3f(r1,g1,b1);
     circle((x-(2*block)),(y+(7*block)+half_block),(2*block)-half_block,(2*block)-half_block);
     circle((x+(1*block)+half_block),(y+(6*block)),(2*block)-half_block,(2*block)-half_block);
     circle((x),(y+(6*block)),(2*block)-half_block,(2*block)-half_block);
-
     circle((x+(2*block)+half_block),(y+(8*block)),(1*block),(1*block));
     circle((x+(1*block)),(y+(7*block)),(2*block)-half_block,(2*block)-half_block);
-
     circle(x-block,(y+(9*block)-half_block),(2*block)-half_block,(2*block)-half_block);
     circle(x+block,(y+(9*block)+half_block),(2*block)-half_block,(2*block)-half_block);
-
-
 
 
     glBegin(GL_TRIANGLES);
@@ -462,33 +440,6 @@ void tree_type3(float x, float y, float height,float r1, float g1, float b1,floa
     glVertex2f(x , (y+(2*block)-half_block));
     glEnd();
 }
-
-
-
-void filledCircle(float c1, float c2, float r, float x, float y, float z)
-{
-    int i=0;
-    int tringle2=50;
-
-    GLfloat tp2 =2.0f * PI  ;
-
-    glBegin (GL_TRIANGLE_FAN);
-    glColor3f(x, y, z);
-    glVertex2f (c1,c2);
-    for(i= 0;i<=tringle2; i++)
-    {
-        glVertex2f(
-                    c1+(r*cos(i*tp2/tringle2)),
-                    c2+(r*sin(i*tp2/tringle2))
-                    );
-    }
-    glEnd ();
-
-    glFlush();  // Render now
-}
-
-
-
 
 
 void mountain1(){
@@ -594,10 +545,11 @@ void mountain2() {
 
 void mountain3() {
 
-    glBegin(GL_POLYGON);
-    glVertex2f(1920,425);glVertex2f(0,425);glVertex2f(0,427);glVertex2f(40,431);glVertex2f(74,436);glVertex2f(141,448);
+    //glBegin(GL_POLYGON);
+    //glVertex2f(1920,425);
+    glVertex2f(0,425);glVertex2f(0,427);glVertex2f(40,431);glVertex2f(74,436);glVertex2f(141,448);
     glVertex2f(189,450);glVertex2f(249,455);glVertex2f(321,465);glVertex2f(404,484);glVertex2f(439,488);glVertex2f(465,491);
-    glVertex2f(491,496);glVertex2f(516,498);glVertex2f(637,485);glVertex2f(649,482);glVertex2f(670,480);glVertex2f(693,482);
+    glVertex2f(491,496);glVertex2f(516,498);glVertex2f(612,493);glVertex2f(637,485);glVertex2f(649,482);glVertex2f(670,480);glVertex2f(693,482);
     glVertex2f(722,485);glVertex2f(734,487);glVertex2f(770,491);glVertex2f(808,498);glVertex2f(829,499);glVertex2f(847,503);
     glVertex2f(865,509);glVertex2f(881,512);glVertex2f(892,516);glVertex2f(906,514);glVertex2f(919,510);glVertex2f(942,506);
     glVertex2f(956,503);glVertex2f(978,500);glVertex2f(987,502);glVertex2f(996,506);glVertex2f(1004,511);glVertex2f(1025,516);
@@ -612,13 +564,15 @@ void mountain3() {
     glVertex2f(1777,628);glVertex2f(1791,628);glVertex2f(1800,629);glVertex2f(1811,633);glVertex2f(1819,635);glVertex2f(1826,636);
     glVertex2f(1842,636);glVertex2f(1851,634);glVertex2f(1862,634);glVertex2f(1870,634);glVertex2f(1880,636);glVertex2f(1890,638);
     glVertex2f(1899,640);glVertex2f(1908,644);glVertex2f(1920,640);
-    glEnd();
+    glVertex2f(1920,425);glVertex2f(1668, 425);
+    //glEnd();
 }
 
 void mountain_front_land() {
 
-    glBegin(GL_POLYGON);
-    glVertex2f(956, 496);glVertex2f(1668, 425);glVertex2f(1641, 419);glVertex2f(1633, 419);glVertex2f(1621, 418);glVertex2f(1611, 418);
+    //glBegin(GL_POLYGON);
+    glVertex2f(1100, 430);
+    glVertex2f(1668, 425);glVertex2f(1641, 419);glVertex2f(1633, 419);glVertex2f(1621, 418);glVertex2f(1611, 418);
     glVertex2f(1579, 418);glVertex2f(1569, 418);glVertex2f(1558, 418);glVertex2f(1550, 420);glVertex2f(1542, 420);glVertex2f(1528, 420);
     glVertex2f(1516, 420);glVertex2f(1504, 418);glVertex2f(1495, 415);glVertex2f(1480, 415);glVertex2f(1474, 415);glVertex2f(1455, 415);
     glVertex2f(1440, 415);glVertex2f(1427, 416);glVertex2f(1420, 417);glVertex2f(1395, 419);glVertex2f(1386, 419);glVertex2f(1374, 419);
@@ -637,9 +591,8 @@ void mountain_front_land() {
     glVertex2f(153, 418);glVertex2f(135, 419);glVertex2f(124, 420);glVertex2f(89, 421);glVertex2f(72, 417);glVertex2f(63, 417);
     glVertex2f(54, 417);glVertex2f(44, 419);glVertex2f(35, 419);glVertex2f(25, 418);glVertex2f(17, 415);glVertex2f(14, 414);
     glVertex2f(0, 420);
-    glEnd();
+    //glEnd();
 }
-
 
 void mountain4() {
 
@@ -663,33 +616,12 @@ void mountain4() {
     glVertex2f(1920,724);glVertex2f(1920,425);
     glEnd();
 }
-/*
-void mountain5() {
-
-    glBegin(GL_POLYGON);
-    glVertex2f(1920,350);glVertex2f(1602,299);glVertex2f(1591,294);glVertex2f(1586,291);glVertex2f(1579,290);glVertex2f(1574,288);
-    glVertex2f(1567,286);glVertex2f(1561,284);glVertex2f(1553,280);glVertex2f(1544,275);glVertex2f(1537,272);glVertex2f(1526,267);
-    glVertex2f(1522,264);glVertex2f(1516,259);glVertex2f(1511,253);glVertex2f(1507,249);glVertex2f(1504,243);glVertex2f(1501,240);
-    glVertex2f(1498,237);glVertex2f(1498,233);glVertex2f(1495,229);glVertex2f(1494,222);glVertex2f(1494,217);glVertex2f(1494,211);
-    glVertex2f(1495,206);glVertex2f(1497,203);glVertex2f(1500,200);glVertex2f(1504,196);glVertex2f(1509,191);glVertex2f(1514,187);
-    glVertex2f(1519,184);glVertex2f(1523,181);glVertex2f(1529,178);glVertex2f(1534,172);glVertex2f(1542,167);glVertex2f(1555,160);
-    glVertex2f(1564,156);glVertex2f(1578,151);glVertex2f(1589,148);glVertex2f(1599,144);glVertex2f(1611,138);glVertex2f(1622,130);
-    glVertex2f(1633,125);glVertex2f(1646,119);glVertex2f(1654,113);glVertex2f(1666,105);glVertex2f(1676,97);glVertex2f(1687,90);
-    glVertex2f(1700,78);glVertex2f(1704,73);glVertex2f(1710,67);glVertex2f(1717,62);glVertex2f(1727,55);glVertex2f(1735,48);
-    glVertex2f(1741,40);glVertex2f(1745,33);glVertex2f(1749,25);glVertex2f(1751,20);glVertex2f(1751,14);glVertex2f(1747,11);
-    glVertex2f(1745,0);glVertex2f(1920,0);
-    glEnd();
-}
-
-*/
 
 void water() {
 
     glVertex2f(0,425);glVertex2f(1920,425);glVertex2f(1920,300);glVertex2f(0,300);
-
     glEnd();
 }
-
 
 waterfall_with_shade_1() {
 
@@ -720,34 +652,7 @@ waterfall_with_shade_2() {
 
     glEnd();
 }
-/*
-void road() {
 
-    glVertex2f(1233,0);glVertex2f(1237,11);glVertex2f(1266,16);glVertex2f(1285,20);glVertex2f(1323,26);glVertex2f(1362,33);
-    glVertex2f(1383,37);glVertex2f(1394,40);glVertex2f(1408,41);glVertex2f(1420,43);glVertex2f(1431,45);glVertex2f(1438,47);
-    glVertex2f(1449,51);glVertex2f(1459,54);glVertex2f(1464,57);glVertex2f(1469,59);glVertex2f(1473,63);glVertex2f(1475,67);
-    glVertex2f(1478,74);glVertex2f(1477,80);glVertex2f(1472,88);glVertex2f(1466,94);glVertex2f(1459,100);glVertex2f(1448,108);
-    glVertex2f(1440,116);glVertex2f(1429,126);glVertex2f(1417,143);glVertex2f(1408,156);glVertex2f(1404,163);glVertex2f(1399,172);
-    glVertex2f(1395,182);glVertex2f(1394,189);glVertex2f(1394,198);glVertex2f(1394,205);glVertex2f(1396,217);glVertex2f(1399,224);
-    glVertex2f(1403,231);glVertex2f(1410,238);glVertex2f(1415,242);glVertex2f(1419,246);glVertex2f(1425,249);glVertex2f(1430,254);
-    glVertex2f(1439,259);glVertex2f(1443,262);glVertex2f(1448,265);glVertex2f(1453,267);glVertex2f(1460,271);glVertex2f(1467,273);
-    glVertex2f(1475,277);glVertex2f(1484,280);glVertex2f(1499,283);glVertex2f(1508,284);glVertex2f(1520,287);glVertex2f(1529,288);
-    glVertex2f(1537,289);glVertex2f(1547,291);glVertex2f(1557,293);glVertex2f(1570,295);glVertex2f(1578,296);glVertex2f(1584,297);
-    glVertex2f(1592,298);glVertex2f(1597,299);glVertex2f(1602,299);glVertex2f(1591,294);glVertex2f(1586,291);glVertex2f(1579,290);
-    glVertex2f(1574,288);glVertex2f(1567,286);glVertex2f(1561,284);glVertex2f(1553,280);glVertex2f(1544,275);glVertex2f(1537,272);
-    glVertex2f(1526,267);glVertex2f(1522,264);glVertex2f(1516,259);glVertex2f(1511,253);glVertex2f(1507,249);glVertex2f(1504,243);
-    glVertex2f(1501,240);glVertex2f(1498,237);glVertex2f(1498,233);glVertex2f(1495,229);glVertex2f(1494,222);glVertex2f(1494,217);
-    glVertex2f(1494,211);glVertex2f(1495,206);glVertex2f(1497,203);glVertex2f(1500,200);glVertex2f(1504,196);glVertex2f(1509,191);
-    glVertex2f(1514,187);glVertex2f(1519,184);glVertex2f(1523,181);glVertex2f(1529,178);glVertex2f(1534,172);glVertex2f(1542,167);
-    glVertex2f(1555,160);glVertex2f(1564,156);glVertex2f(1578,151);glVertex2f(1589,148);glVertex2f(1599,144);glVertex2f(1611,138);
-    glVertex2f(1622,130);glVertex2f(1633,125);glVertex2f(1646,119);glVertex2f(1654,113);glVertex2f(1666,105);glVertex2f(1676,97);
-    glVertex2f(1687,90);glVertex2f(1700,78);glVertex2f(1704,73);glVertex2f(1710,67);glVertex2f(1717,62);glVertex2f(1727,55);
-    glVertex2f(1735,48);glVertex2f(1741,40);glVertex2f(1745,33);glVertex2f(1749,25);glVertex2f(1751,20);glVertex2f(1751,14);
-    glVertex2f(1747,11);glVertex2f(1745,0);
-
-    glEnd();
-}
-*/
 void water_shade1() {
 
     glVertex2f(1139,362);glVertex2f(1148,367);glVertex2f(1329,368);glVertex2f(1398,368);glVertex2f(1514,369);glVertex2f(1517,366);
@@ -778,7 +683,6 @@ void water_shade3() {
     glVertex2f(1689,376);glVertex2f(1688,376);glVertex2f(1687,377);glVertex2f(1686,377);glVertex2f(1685,377);glVertex2f(1684,377);
     glVertex2f(1683,378);glVertex2f(1682,378);glVertex2f(1681,378);glVertex2f(1680,379);glVertex2f(1679,379);glVertex2f(1679,380);
     glVertex2f(1678,380);glVertex2f(1678,381);
-
     glEnd();
 }
 
@@ -803,6 +707,7 @@ void water_shade5() {
 
     glEnd();
 }
+
 void water_shade6() {
 
     glVertex2f(1115,403);glVertex2f(1126,403);glVertex2f(1126,403);glVertex2f(1365,403);glVertex2f(1365,403);glVertex2f(1365,403);
@@ -811,63 +716,6 @@ void water_shade6() {
 
     glEnd();
 }
-
-/*
-void tree_0n_mountain5() {
-
-    glVertex2f(1920,332);glVertex2f(1915,329);glVertex2f(1913,327);glVertex2f(1912,325);glVertex2f(1913,322);glVertex2f(1913,321);
-    glVertex2f(1913,318);glVertex2f(1913,316);glVertex2f(1912,315);glVertex2f(1910,314);glVertex2f(1909,314);glVertex2f(1907,315);
-    glVertex2f(1905,315);glVertex2f(1902,315);glVertex2f(1901,314);glVertex2f(1898,313);glVertex2f(1894,312);glVertex2f(1893,310);
-    glVertex2f(1893,308);glVertex2f(1895,305);glVertex2f(1896,303);glVertex2f(1896,299);glVertex2f(1896,297);glVertex2f(1893,294);
-    glVertex2f(1888,294);glVertex2f(1885,295);glVertex2f(1883,297);glVertex2f(1880,299);glVertex2f(1877,298);glVertex2f(1875,294);
-    glVertex2f(1873,292);glVertex2f(1870,289);glVertex2f(1866,288);glVertex2f(1864,287);glVertex2f(1862,288);glVertex2f(1859,289);
-    glVertex2f(1854,291);glVertex2f(1848,288);glVertex2f(1845,285);glVertex2f(1844,281);glVertex2f(1843,278);glVertex2f(1838,276);
-    glVertex2f(1833,276);glVertex2f(1829,277);glVertex2f(1824,281);glVertex2f(1821,282);glVertex2f(1816,278);glVertex2f(1812,276);
-    glVertex2f(1807,275);glVertex2f(1802,274);glVertex2f(1795,278);glVertex2f(1791,274);glVertex2f(1786,273);glVertex2f(1780,274);
-    glVertex2f(1774,279);glVertex2f(1771,283);glVertex2f(1767,278);glVertex2f(1760,279);glVertex2f(1756,280);glVertex2f(1754,283);
-    glVertex2f(1751,286);glVertex2f(1748,288);glVertex2f(1746,288);glVertex2f(1743,285);glVertex2f(1739,284);glVertex2f(1732,283);
-    glVertex2f(1728,284);glVertex2f(1726,287);glVertex2f(1724,289);glVertex2f(1719,291);glVertex2f(1715,292);glVertex2f(1710,293);
-    glVertex2f(1707,295);glVertex2f(1706,296);glVertex2f(1706,300);glVertex2f(1706,303);glVertex2f(1706,305);glVertex2f(1701,308);
-    glVertex2f(1696,310);glVertex2f(1691,314);glVertex2f(1688,316);glVertex2f(1688,321);glVertex2f(1691,325);glVertex2f(1689,326);
-    glVertex2f(1689,330);glVertex2f(1692,337);glVertex2f(1697,340);glVertex2f(1702,340);glVertex2f(1704,340);glVertex2f(1705,346);
-    glVertex2f(1709,350);glVertex2f(1716,351);glVertex2f(1718,351);glVertex2f(1721,352);glVertex2f(1721,356);glVertex2f(1721,364);
-    glVertex2f(1726,369);glVertex2f(1736,369);glVertex2f(1740,370);glVertex2f(1741,375);glVertex2f(1740,378);glVertex2f(1741,380);
-    glVertex2f(1747,381);glVertex2f(1751,381);glVertex2f(1754,384);glVertex2f(1753,389);glVertex2f(1753,394);glVertex2f(1756,399);
-    glVertex2f(1761,400);glVertex2f(1766,399);glVertex2f(1769,398);glVertex2f(1772,397);glVertex2f(1778,394);glVertex2f(1780,397);
-    glVertex2f(1779,402);glVertex2f(1776,409);glVertex2f(1779,414);glVertex2f(1784,417);glVertex2f(1778,425);glVertex2f(1776,430);
-    glVertex2f(1778,434);glVertex2f(1781,437);glVertex2f(1786,439);glVertex2f(1790,439);glVertex2f(1795,442);glVertex2f(1794,446);
-    glVertex2f(1795,444);glVertex2f(1795,446);glVertex2f(1795,448);glVertex2f(1796,451);glVertex2f(1798,453);glVertex2f(1802,455);
-    glVertex2f(1803,455);glVertex2f(1805,454);glVertex2f(1809,453);glVertex2f(1811,451);glVertex2f(1814,446);glVertex2f(1815,444);
-    glVertex2f(1816,442);glVertex2f(1818,442);glVertex2f(1820,443);glVertex2f(1822,445);glVertex2f(1821,449);glVertex2f(1823,453);
-    glVertex2f(1824,455);glVertex2f(1827,454);glVertex2f(1832,452);glVertex2f(1835,454);glVertex2f(1837,457);glVertex2f(1836,460);
-    glVertex2f(1834,463);glVertex2f(1833,465);glVertex2f(1832,469);glVertex2f(1832,473);glVertex2f(1833,476);glVertex2f(1836,478);
-    glVertex2f(1840,481);glVertex2f(1844,484);glVertex2f(1845,487);glVertex2f(1846,490);glVertex2f(1849,492);glVertex2f(1853,493);
-    glVertex2f(1856,493);glVertex2f(1858,492);glVertex2f(1861,489);glVertex2f(1863,487);glVertex2f(1865,483);glVertex2f(1867,480);
-    glVertex2f(1867,479);glVertex2f(1870,479);glVertex2f(1873,480);glVertex2f(1874,484);glVertex2f(1872,489);glVertex2f(1870,492);
-    glVertex2f(1872,496);glVertex2f(1875,498);glVertex2f(1875,502);glVertex2f(1874,505);glVertex2f(1874,509);glVertex2f(1875,513);
-    glVertex2f(1877,515);glVertex2f(1880,517);glVertex2f(1884,519);glVertex2f(1884,522);glVertex2f(1885,524);glVertex2f(1888,527);
-    glVertex2f(1893,529);glVertex2f(1899,529);glVertex2f(1907,526);glVertex2f(1907,525);glVertex2f(1909,524);glVertex2f(1911,524);
-    glVertex2f(1913,524);glVertex2f(1914,525);glVertex2f(1915,526);glVertex2f(1917,527);glVertex2f(1920,528);
-
-    glEnd();
-}
-
-void right_tree_branch() {
-
-    glVertex2f(1920,353);glVertex2f(1918,353);glVertex2f(1915,353);glVertex2f(1913,355);glVertex2f(1908,355);glVertex2f(1903,355);
-    glVertex2f(1900,356);glVertex2f(1897,357);glVertex2f(1894,357);glVertex2f(1903,356);glVertex2f(1893,358);glVertex2f(1887,362);
-    glVertex2f(1882,363);glVertex2f(1874,365);glVertex2f(1866,364);glVertex2f(1860,363);glVertex2f(1854,363);glVertex2f(1848,361);
-    glVertex2f(1854,390);glVertex2f(1856,391);glVertex2f(1860,393);glVertex2f(1862,393);glVertex2f(1865,395);glVertex2f(1868,396);
-    glVertex2f(1874,397);glVertex2f(1878,397);glVertex2f(1883,396);glVertex2f(1887,395);glVertex2f(1890,394);glVertex2f(1893,392);
-    glVertex2f(1896,391);glVertex2f(1898,390);glVertex2f(1900,389);glVertex2f(1902,389);glVertex2f(1905,388);glVertex2f(1909,387);
-    glVertex2f(1911,386);glVertex2f(1914,386);glVertex2f(1915,388);glVertex2f(1915,391);glVertex2f(1913,394);glVertex2f(1912,398);
-    glVertex2f(1910,400);glVertex2f(1908,403);glVertex2f(1906,407);glVertex2f(1905,409);glVertex2f(1904,413);glVertex2f(1902,416);
-    glVertex2f(1901,419);glVertex2f(1901,422);glVertex2f(1920,422);
-
-    glEnd();
-}
-
-*/
 
 void big_tree_root_with_shade1() {
 
@@ -945,7 +793,6 @@ void tree_leaf4() {
     glEnd();
 }
 
-
 void tree_leaf3() {
 
     glVertex2f(5,482);glVertex2f(-8,360);glVertex2f(-2,359);glVertex2f(-2,359);glVertex2f(3,357);glVertex2f(8,354);
@@ -993,7 +840,6 @@ void tree_leaf2() {
 
     glEnd();
 }
-
 
 void tree_leaf1() {
 
@@ -1088,10 +934,6 @@ void human() {
     glEnd();
 }
 
-
-
-
-
 void human_dress() {
 
     glVertex2f(1844,354);glVertex2f(1844,354);glVertex2f(1844,350);glVertex2f(1844,350);glVertex2f(1843,350);glVertex2f(1843,349);
@@ -1147,7 +989,6 @@ void plane() {
 
     glEnd();
 }
-
 
 void land_shade() {
 
@@ -1262,145 +1103,6 @@ void fire1(){
 
 }
 
-void moving_fire1(){
-
-    glVertex2f(673, 154);
-    glVertex2f(673, 140);
-    glVertex2f(675, 141);
-    glVertex2f(678, 142);
-    glVertex2f(680, 145);
-    glVertex2f(682, 147);
-    glVertex2f(684, 150);
-    glVertex2f(687, 155);
-    glVertex2f(687, 157);
-    glVertex2f(688, 159);
-    glVertex2f(688, 163);
-    glVertex2f(687, 166);
-    glVertex2f(686, 170);
-    glVertex2f(685, 173);
-    glVertex2f(684, 175);
-    glVertex2f(683, 176);
-    glVertex2f(681, 175);
-    glVertex2f(679, 174);
-    glVertex2f(677, 173);
-    glVertex2f(676, 173);
-    glVertex2f(675, 174);
-    glVertex2f(675, 175);
-    glVertex2f(676, 176);
-    glVertex2f(677, 178);
-    glVertex2f(678, 180);
-    glVertex2f(678, 182);
-    glVertex2f(678, 184);
-    glVertex2f(677, 185);
-    glVertex2f(677, 186);
-    glVertex2f(676, 187);
-    glVertex2f(676, 188);
-    glVertex2f(675, 188);
-    glVertex2f(673, 189);
-    glVertex2f(672, 190);
-    glVertex2f(671, 190);
-    glVertex2f(670, 191);
-    glVertex2f(670, 191);
-    glVertex2f(670, 190);
-    glVertex2f(670, 188);
-    glVertex2f(670, 188);
-    glVertex2f(670, 187);
-    glVertex2f(670, 186);
-    glVertex2f(670, 186);
-    glVertex2f(670, 185);
-    glVertex2f(669, 185);
-    glVertex2f(668, 185);
-    glVertex2f(667, 186);
-    glVertex2f(667, 187);
-    glVertex2f(666, 187);
-    glVertex2f(665, 189);
-    glVertex2f(664, 191);
-    glVertex2f(664, 193);
-    glVertex2f(664, 194);
-    glVertex2f(663, 196);
-    glVertex2f(663, 198);
-    glVertex2f(627, 199);
-    glVertex2f(662, 198);
-    glVertex2f(661, 197);
-    glVertex2f(660, 196);
-    glVertex2f(659, 195);
-    glVertex2f(659, 194);
-    glVertex2f(658, 193);
-    glVertex2f(657, 192);
-    glVertex2f(656, 190);
-    glVertex2f(656, 189);
-    glVertex2f(655, 188);
-    glVertex2f(655, 187);
-    glVertex2f(655, 186);
-    glVertex2f(655, 185);
-    glVertex2f(654, 185);
-    glVertex2f(654, 184);
-    glVertex2f(653, 184);
-    glVertex2f(653, 184);
-    glVertex2f(652, 185);
-    glVertex2f(651, 185);
-    glVertex2f(650, 186);
-    glVertex2f(649, 188);
-    glVertex2f(648, 188);
-    glVertex2f(649, 187);
-    glVertex2f(649, 185);
-    glVertex2f(650, 183);
-    glVertex2f(650, 182);
-    glVertex2f(650, 181);
-    glVertex2f(649, 179);
-    glVertex2f(649, 178);
-    glVertex2f(649, 177);
-    glVertex2f(649, 176);
-    glVertex2f(648, 174);
-    glVertex2f(648, 173);
-    glVertex2f(648, 172);
-    glVertex2f(647, 172);
-    glVertex2f(647, 172);
-    glVertex2f(647, 172);
-    glVertex2f(646, 172);
-    glVertex2f(645, 173);
-    glVertex2f(644, 175);
-    glVertex2f(643, 176);
-    glVertex2f(642, 177);
-    glVertex2f(642, 178);
-    glVertex2f(641, 177);
-    glVertex2f(641, 176);
-    glVertex2f(641, 175);
-    glVertex2f(641, 173);
-    glVertex2f(642, 172);
-    glVertex2f(642, 170);
-    glVertex2f(642, 169);
-    glVertex2f(643, 167);
-    glVertex2f(643, 166);
-    glVertex2f(643, 165);
-    glVertex2f(643, 164);
-    glVertex2f(643, 163);
-    glVertex2f(642, 162);
-    glVertex2f(642, 161);
-    glVertex2f(641, 161);
-    glVertex2f(640, 160);
-    glVertex2f(640, 160);
-    glVertex2f(639, 159);
-    glVertex2f(639, 159);
-    glVertex2f(638, 159);
-    glVertex2f(638, 158);
-    glVertex2f(637, 158);
-    glVertex2f(639, 156);
-    glVertex2f(641, 154);
-    glVertex2f(644, 151);
-    glVertex2f(646, 149);
-    glVertex2f(649, 147);
-    glVertex2f(652, 144);
-    glVertex2f(655, 142);
-    glVertex2f(658, 141);
-    glVertex2f(664, 139);
-    glVertex2f(667, 138);
-    glVertex2f(671, 139);
-}
-
-
-
-
 void fire2(){
 
     glBegin(GL_POLYGON);
@@ -1423,7 +1125,6 @@ void fire2(){
     glVertex2f(674, 139);glVertex2f(673, 140);
     glEnd();
 }
-
 
 void fire3(){
 
@@ -1451,7 +1152,6 @@ void fire3(){
     glEnd();
 }
 
-
 void day() {
     glClearColor(0.61f,0.95f,1.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT); // Clear the color buffer (background)
@@ -1464,7 +1164,6 @@ void day() {
     glColor3f(0.97f,1.0f,0.7f);
     glVertex2f(0,425);glVertex2f(0,1080);glVertex2f(1920,1080);glVertex2f(1920,425);
     glEnd();
-
 
 
     //Sun
@@ -1553,7 +1252,7 @@ void day() {
 
     //Plane
     glPushMatrix();
-    glTranslatef(-plane_position*4,0,0);
+    glTranslatef(-plane_position,0,0);
     glBegin(GL_POLYGON);
     glColor3f(0.42f,0.63f,0.72f);
     plane();
@@ -1577,17 +1276,19 @@ void day() {
     glColor3f(0.18f,0.8f,0.45f);
     mountain2();
 
+    //Water
+    glBegin(GL_QUADS);
+    glColor3f(0.61f,0.95f,1.0f);
+    water();
+
+    //Mountain 3 front land
+    glBegin(GL_POLYGON);
+    glColor3f(0.0f,0.4f,0.1f);
+    mountain_front_land();
     //Mountain 3
     glColor3f(0.0f,0.6f,0.26f);
     mountain3();
-
-
-    //Mountain 3 front land
-    //glColor3f(0.0f,0.6f,0.26f);
-    //mountain_front_land();
-
-
-
+    glEnd();
 
 
     //Tree type 1 on mountain
@@ -1598,16 +1299,18 @@ void day() {
     tree_type1(355, 613, 40,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
     tree_type1(1650, 630, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
     tree_type1(830, 737, 20,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
-    tree_type2(995, 504, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
 
+    //Tree type 2 on mountain
+    tree_type2(995, 504, 65,0.57f,1.0f,0.14f,0.4f,0.79f,0.0f,0.56f,0.33f,0.0f);
     tree_type2(1528, 607, 60,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
     tree_type2(1083, 515, 67,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
     tree_type2(421, 478, 70,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
     tree_type2(731, 540, 40,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
     tree_type2(1559, 692, 20,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
     tree_type2(1216,703, 30,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
-    tree_type2(1880,100, 400,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
+    tree_type2(1142,549, 60,0.5f,0.61f,0.12f,0.66f,0.8f,0.15f,0.56f,0.33f,0.0f);
 
+    //Tree type 3 on mountain
     tree_type3(1774, 627, 70,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
     tree_type3(1600, 616, 70,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
     tree_type3(636, 489, 75,0.49f,0.74f,0.02f,0.27f,0.63f,0.1f,0.56f,0.33f,0.0f);
@@ -1621,7 +1324,7 @@ void day() {
 
 
 
-    //House 1 on mountain 3////////////////////////////////////////////////////////////////////////
+    //House 1 on mountain 3(middle house)////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
 
     glBegin(GL_POLYGON);
@@ -1642,6 +1345,7 @@ void day() {
     glEnd();
 
 
+    //roof line
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
     glVertex2f(1352, 624);glVertex2f(1378, 628);
@@ -1652,24 +1356,27 @@ void day() {
     glVertex2f(1412, 633);glVertex2f(1421, 624);
     glEnd();
 
-
-
+    //roof line
     glLineWidth(4);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
     glVertex2f(1394, 640);glVertex2f(1406, 624);
     glEnd();
 
+
+    //left wall
     glBegin(GL_QUADS);
     glColor3f(0.61f,0.52f,0.21f);
     glVertex2f(1356, 624);glVertex2f(1378, 628);glVertex2f(1378, 611);glVertex2f(1356, 611);
     glEnd();
 
+    //right wall
     glBegin(GL_QUADS);
     glColor3f(0.75f,0.63f,0.25f);
     glVertex2f(1378, 628);glVertex2f(1417, 624);glVertex2f(1417, 611);glVertex2f(1378, 611);
     glEnd();
 
+    //roof border
     glLineWidth(2);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
@@ -1684,7 +1391,7 @@ void day() {
     glVertex2f(1395, 611);glVertex2f(1395, 620);glVertex2f(1399, 620);glVertex2f(1399, 611);
     //Gate's Left window
     glVertex2f(1382, 620);glVertex2f(1382, 615);glVertex2f(1391, 615);glVertex2f(1391, 620);
-    // Gate's right window
+    //Gate's right window
     glVertex2f(1403, 620);glVertex2f(1403, 615);glVertex2f(1412, 615);glVertex2f(1412, 620);
     glEnd();
 
@@ -1733,13 +1440,12 @@ void day() {
     glVertex2f(1404, 611);glVertex2f(1404, 603);
     glVertex2f(1412, 611);glVertex2f(1412, 603);
     glVertex2f(1417, 611);glVertex2f(1417, 603);
-    //glVertex2f(1421, 611);glVertex2f(1421, 603);
     glVertex2f(1374, 611);glVertex2f(1374, 603);
     glVertex2f(1367, 611);glVertex2f(1367, 606);
     glVertex2f(1361, 611);glVertex2f(1361, 607);
     glEnd();
 
-    //House 2 on mountain 3////////////////////////////////////////////////////////////////////////
+    //House 2 on mountain 3 (left most house)////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
     glBegin(GL_POLYGON);
     glColor3f(0.5f,0.41f,0.13f);
@@ -1758,6 +1464,8 @@ void day() {
     glVertex2f(574, 519);glVertex2f(561, 519);glVertex2f(552, 510);glVertex2f(565, 510);
     glEnd();
 
+
+    //roof lines
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
     glVertex2f(621, 510);glVertex2f(595, 514);
@@ -1767,25 +1475,25 @@ void day() {
     glVertex2f(574, 519);glVertex2f(561, 519);
     glVertex2f(561, 519);glVertex2f(552, 510);
     glEnd();
-
-
     glLineWidth(4);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
     glVertex2f(579, 526);glVertex2f(567, 510);
     glEnd();
 
+    //right wall
     glBegin(GL_QUADS);
-    glColor3f(0.61f,0.52f,0.21f);
+    glColor3f(0.75f,0.63f,0.25f);//glColor3f(0.61f,0.52f,0.21f);
     glVertex2f(617, 510);glVertex2f(595, 514);glVertex2f(595, 497);glVertex2f(617, 497);
     glEnd();
 
+    //left wall
     glBegin(GL_QUADS);
-    glColor3f(0.75f,0.63f,0.25f);
+    glColor3f(0.61f,0.52f,0.21f);//glColor3f(0.75f,0.63f,0.25f);
     glVertex2f(595, 514);glVertex2f(556, 510);glVertex2f(556, 497);glVertex2f(595, 497);
     glEnd();
 
-
+    //roof border
     glLineWidth(2);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
@@ -1854,8 +1562,7 @@ void day() {
     glVertex2f(612, 497);glVertex2f(612, 493);
     glEnd();
 
-
-    //House 3 on mountain 3////////////////////////////////////////////////////////////////////////
+    //House 3 on mountain (right most house)////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
     glBegin(GL_POLYGON);
     glColor3f(0.5f,0.41f,0.13f);
@@ -1868,6 +1575,7 @@ void day() {
     glVertex2f(1775, 644);glVertex2f(1784, 653);glVertex2f(1818, 662);glVertex2f(1801, 648);
     glEnd();
 
+    //roof lines
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
     glVertex2f(1775, 644);glVertex2f(1801, 648);
@@ -1875,26 +1583,27 @@ void day() {
     glVertex2f(1818, 661);glVertex2f(1831, 644);
     glVertex2f(1801, 648);glVertex2f(1844, 644);
     glEnd();
-
+    //roof lines
     glLineWidth(4);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
     glVertex2f(1817, 660);glVertex2f(1829, 644);
     glEnd();
 
+    //left wall
     glBegin(GL_QUADS);
     glColor3f(0.61f,0.52f,0.21f);
     glVertex2f(1779, 644);glVertex2f(1801, 648);
     glVertex2f(1801, 631);glVertex2f(1779, 631);
     glEnd();
-
+    //right wall
     glBegin(GL_QUADS);
     glColor3f(0.75f,0.63f,0.25f);
     glVertex2f(1801, 648);glVertex2f(1840, 644);
     glVertex2f(1840, 631);glVertex2f(1801, 631);
     glEnd();
 
-
+    //roof lines
     glLineWidth(2);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
@@ -1927,6 +1636,7 @@ void day() {
     glEnd();
 
 
+    //railing
     glLineWidth(1);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
@@ -1970,16 +1680,12 @@ void day() {
     glEnd();
 
 
-    //Water
-    glBegin(GL_QUADS);
-    glColor3f(0.61f,0.95f,1.0f);
-    water();
-
-
     //waterfall front water shade
+    glPushMatrix();
+    glTranslatef(0,-waterfall_on_river_position,0);
     glColor3f(0.41f,0.89f,0.92f);
-    glVertex2f(1760,425);
-    circle(1742, 425, 50, 10);
+    circle(1765, 425, 50, 8);
+    glPopMatrix();
 
     //cell tower/////////////////////////////////////////////
     //Middle white line
@@ -2071,26 +1777,15 @@ void day() {
 
     glVertex2f(1902, 865);glVertex2f(1893, 878);
     glVertex2f(1893, 878);glVertex2f(1887, 891);
-
-    //horizontal
-
-
+    //horizontal line
     glVertex2f(1887, 872);glVertex2f(1893, 872);
     glVertex2f(1893, 872);glVertex2f(1902, 872);
 
     glVertex2f(1887, 885);glVertex2f(1893, 885);
     glVertex2f(1893, 885);glVertex2f(1901, 885);
 
-
-
-
-
-/*
-
-*/
-
-
     glEnd();
+
 
     //Darker White part
     glBegin(GL_LINES);
@@ -2114,10 +1809,6 @@ void day() {
 
     glVertex2f(1893, 865);glVertex2f(1901, 878);
     glVertex2f(1901, 878);glVertex2f(1893, 891);
-
-
-
-
     glEnd();
 
 
@@ -2263,7 +1954,7 @@ void day() {
     circle(1878,908,5,8);
     circle(1909,908,5,8);
 
-    //Light
+    //Tower Light(off)
     glLineWidth(2);
     glBegin(GL_LINES);
     glColor3f(0.93f,0.32f,0.18f);
@@ -2379,36 +2070,23 @@ void day() {
     water_shade4();
     glPopMatrix();
 
-    //Water shade 5(Moving)
+
     glPushMatrix();
     glTranslatef(-water_shade_position5,0,0);
     glBegin(GL_POLYGON);
     water_shade5();
     glPopMatrix();
 
+    //Water shade 5(Moving)
     glPushMatrix();
     glTranslatef(-water_shade_position6,0,0);
     glBegin(GL_POLYGON);
     water_shade6();
     glPopMatrix();
 
-/*
-
-    glLineWidth(2);
-    glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.6f,0.26f);
-    glVertex2f(890,475);
-    bezier_curve4(1700, 425,1260,410,1000,426,500,415);
-    bezier_curve4(500,415,400,425,200,425,0,410);
-    glEnd();
-
-*/
 
 
 
-   //Mountain 3 front land
-     glColor3f(0.0f,0.6f,0.26f);
-     mountain_front_land();
 
 
     glLineWidth(2);
@@ -2452,26 +2130,16 @@ void day() {
     glBegin(GL_POLYGON);
     glColor3f(0.35f,0.36f,0.38f);
     human_dress();
-
-
-
     glPopMatrix();
 
 
-    //Mountain 5 (River front Mountain)
-    //glColor3f(0.0f,0.6f,0.26f);
-    //mountain5();
 
 
-
-
-
-
-    //Tent 1______________________________________________________________
+    //Tent 1(left tent)______________________________________________________________
 
     //Side shade
     glBegin(GL_POLYGON);
-    glColor3f(0.89f, 0.55f, 0.0f);
+    glColor3f(0.74f, 0.46f, 0.16f);//glColor3f(0.89f, 0.55f, 0.0f);
     glVertex2f(276,169);glVertex2f(271,207);glVertex2f(456,318);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(354,133);
     glEnd();
 
@@ -2483,14 +2151,15 @@ void day() {
 
     //roof
     glBegin(GL_POLYGON);
-    glColor3f(1.0f, 0.67f, 0.14f);
+
+    glColor3f(0.89f, 0.55f, 0.0f);//glColor3f(1.0f, 0.67f, 0.14f);
     glVertex2f(252,203);glVertex2f(346,317);glVertex2f(456,318);glVertex2f(343,177);
     glEnd();
 
     //Front with gate
     glBegin(GL_POLYGON);
     glColor3f(1.0f, 0.72f, 0.27f);
-    glVertex2f(354,133);glVertex2f(347,175);glVertex2f(478,278);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
+    glVertex2f(354,133);glVertex2f(344,182);glVertex2f(452,314);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
     glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(454,251);
     glEnd();
@@ -2498,7 +2167,7 @@ void day() {
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.74f, 0.46f, 0.16f);
-    glVertex2f(461,141);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
+    glVertex2f(461,140);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(455,251);glVertex2f(454,251);glVertex2f(450,139);
     glEnd();
 
@@ -2525,7 +2194,7 @@ void day() {
     //Tent anchor 1 rope
     glBegin(GL_LINES);
     glColor3f(0.49,0.25,0.0f);
-    glVertex2f(289,134);glVertex2f(342,177);
+    glVertex2f(289,134);glVertex2f(340,178);
     glEnd();
 
     //Tent anchor 2 rope
@@ -2542,7 +2211,7 @@ void day() {
 
 
 
-    //Tent 2______________________________________________________________
+    //Tent 2(right tent)______________________________________________________________
 
     //Side shade
     glBegin(GL_POLYGON);
@@ -2573,7 +2242,7 @@ void day() {
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.74f, 0.46f, 0.16f);
-    glVertex2f(741,171);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
+    glVertex2f(741,170);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
     glVertex2f(747,281);glVertex2f(748,281);glVertex2f(752,169);
     glEnd();
 
@@ -2614,14 +2283,6 @@ void day() {
     glEnd();
 
 
-    //Tree on mountain 5
-    //glBegin(GL_POLYGON);
-    //glColor3f(0.02f,0.58f,0.1f);
-    //glVertex2f(1920, 420);
-    //glColor3f(0.0f,0.42f,0.06f);
-    //tree_0n_mountain5();
-
-
     //Big tree
     glBegin(GL_POLYGON);
     //Light color
@@ -2648,12 +2309,6 @@ void day() {
     glBegin(GL_POLYGON);
     glColor3f(0.66f,0.95f,0.12f);
     tree_leaf4();
-
-
-    //Right side tree branch
-    //glBegin(GL_POLYGON);
-    //glColor3f(0.49,0.25,0.0f);
-    //right_tree_branch();
 
 
     //River front 3 right side trees
@@ -2742,7 +2397,6 @@ void day() {
     glFlush(); // Render now
 }
 
-
 void cover() {
     //glClear(GL_COLOR_BUFFER_BIT); // Clear the color buffer (background)
     glClearColor(0.61f,0.95f,1.0f, 1.0f); // Set background color to black and opaque
@@ -2777,14 +2431,11 @@ void cover() {
  glFlush(); // Render now
 }
 
-
 void night() {
 
     glClearColor(0.61f,0.95f,1.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT); // Clear the color buffer (background)
     glLineWidth(2);
-
-
 
     //Sky with shade
     glBegin(GL_POLYGON);
@@ -2796,144 +2447,38 @@ void night() {
     glColor3f(0.0f,0.0f,0.23f);
     glVertex2f(1920,1080);
 
-    //glColor3f(0.0f,0.3f,0.63f);
-    //glVertex2f(0,425);glVertex2f(0,1080);glVertex2f(1920,1080);glVertex2f(1920,425);
     glEnd();
 
-    //Stars
+    //Stars with circle
     glColor3f(0.61f,0.98f,1.0f);
-    circle(304, 821, 1, 1);
-    circle(356, 856, 1, 1);
-    circle(608, 817, 1, 1);
-    circle(755, 829, 1, 1);
-    circle(844, 856, 1, 1);
-    circle(869, 903, 1, 1);
-    circle(761, 929, 1, 1);
-    circle(735, 882, 1, 1);
-    circle(787, 895, 1, 1);
-    circle(619, 900, 1, 1);
-    circle(899, 823, 1, 1);
-    circle(1745, 780, 1, 1);
-    circle(1835, 833, 1, 1);
-    circle(1844, 1024, 1, 1);
-    circle(1805, 966, 1, 1);
-    circle(1515, 1019, 1, 1);
-    circle(1475, 906, 1, 1);
-    circle(1421, 818, 1, 1);
-    circle(1250, 794, 1, 1);
-    circle(879, 1025, 1, 1);
-    circle(651, 1012, 1, 1);
-    circle(431, 979, 1, 1);
-    circle(318, 1041, 1, 1);
-    circle(266, 861, 1, 1);
-    circle(61, 930, 1, 1);
-    circle(147, 954, 1, 1);
-    circle(162, 777, 1, 1);
-    circle(413, 726, 1, 1);
-    circle(772, 845, 1, 1);
-    circle(608, 845, 1, 1);
-    circle(953, 926, 1, 1);
-    circle(903, 824, 1, 1);
-    circle(705, 703, 1, 1);
-    circle(1182, 802, 1, 1);
-    circle(1736, 660, 1, 1);
-    circle(1608, 703, 1, 1);
-    circle(1639, 1012, 1, 1);
-    circle(1076, 982, 1, 1);
-    circle(934, 806, 1, 1);
-    circle(580, 827, 1, 1);
-    circle(306, 870, 1, 1);
-    circle(247, 765, 1, 1);
-    circle(362, 1047, 1, 1);
-    circle(1315, 787, 1, 1);
-    circle(1200, 900,1,1);
-    circle(37, 1064, 1, 1);
-    circle(38, 991, 1, 1);
-    circle(190, 959, 1, 1);
-    circle(339, 969, 1, 1);
-    circle(258, 1015, 1, 1);
-    circle(184, 903, 1, 1);
-    circle(156, 1000, 1, 1);
-    circle(138, 1042, 1, 1);
-    circle(532, 959, 1, 1);
-    circle(494, 858, 1, 1);
-    circle(403, 809, 1, 1);
-    circle(381, 899, 1, 1);
-    circle(312, 929, 1, 1);
-    circle(127, 866, 1, 1);
-    circle(37, 833, 1, 1);
-    circle(109, 717, 1, 1);
-    circle(160, 790, 1, 1);
-    circle(315, 718, 1, 1);
-    circle(403, 675, 1, 1);
-    circle(523, 754, 1, 1);
-    circle(699, 766, 1, 1);
-    circle(621, 727, 1, 1);
-    circle(597, 911, 1, 1);
-    circle(627, 995, 1, 1);
-    circle(833, 1043, 1, 1);
-    circle(1009, 1049, 1, 1);
-    circle(1142, 988, 1, 1);
-    circle(967, 942, 1, 1);
-    circle(955, 1018, 1, 1);
-    circle(1332, 1004, 1, 1);
-    circle(1475, 936, 1, 1);
-    circle(1380, 864, 1, 1);
-    circle(1261, 821, 1, 1);
-    circle(1155, 876, 1, 1);
-    circle(1021, 875, 1, 1);
-    circle(1145, 926, 1, 1);
-    circle(1434, 973, 1, 1);
-    circle(1559, 1046, 1, 1);
-    circle(1921, 1079, 1, 1);
-    circle(1848, 1034, 1, 1);
-    circle(1890, 1040, 1, 1);
-    circle(1871, 927, 1, 1);
-    circle(1824, 821, 1, 1);
-    circle(1718, 736, 1, 1);
-    circle(1610, 712, 1, 1);
-    circle(1456, 766, 1, 1);
-    circle(1627, 846, 1, 1);
-    circle(1705, 914, 1, 1);
-    circle(1563, 917, 1, 1);
-    circle(1422, 831, 1, 1);
-    circle(1295, 772, 1, 1);
-    circle(1223, 836, 1, 1);
-    circle(1149, 932, 1, 1);
-    circle(1149, 994, 1, 1);
-    circle(925, 1048, 1, 1);
-    circle(707, 1034, 1, 1);
-    circle(713, 935, 1, 1);
-    circle(899, 941, 1, 1);
-    circle(811, 979, 1, 1);
-    circle(485, 1001, 1, 1);
-    circle(371, 1037, 1, 1);
-    circle(65, 1043, 1, 1);
-    circle(172, 818, 1, 1);
-    circle(297, 760, 1, 1);
-    circle(555, 750, 1, 1);
-    circle(445, 815, 1, 1);
-    circle(351, 912, 1, 1);
-    circle(475, 927, 1, 1);
-    circle(522, 867, 1, 1);
-    circle(627, 930, 1, 1);
-    circle(982, 885, 1, 1);
-    circle(985, 821, 1, 1);
-    circle(1115, 977, 1, 1);
-    circle(1554, 1031, 1, 1);
-    circle(1840, 1051, 1, 1);
-    circle(1453, 807, 1, 1);
-    circle(1307, 766, 1, 1);
-    circle(899, 772, 1, 1);
-    circle(508, 771, 1, 1);
-    circle(186, 733, 1, 1);
-
+    circle(304, 821, 1, 1);circle(356, 856, 1, 1);circle(608, 817, 1, 1);circle(755, 829, 1, 1);circle(844, 856, 1, 1);circle(869, 903, 1, 1);
+    circle(761, 929, 1, 1);circle(735, 882, 1, 1);circle(787, 895, 1, 1);circle(619, 900, 1, 1);circle(899, 823, 1, 1);circle(1745, 780, 1, 1);
+    circle(1835, 833, 1, 1);circle(1844, 1024, 1, 1);circle(1805, 966, 1, 1);circle(1515, 1019, 1, 1);circle(1475, 906, 1, 1);circle(1421, 818, 1, 1);
+    circle(1250, 794, 1, 1);circle(879, 1025, 1, 1);circle(651, 1012, 1, 1);circle(431, 979, 1, 1);circle(318, 1041, 1, 1);circle(266, 861, 1, 1);
+    circle(61, 930, 1, 1);circle(147, 954, 1, 1);circle(162, 777, 1, 1);circle(413, 726, 1, 1);circle(772, 845, 1, 1);circle(608, 845, 1, 1);
+    circle(953, 926, 1, 1);circle(903, 824, 1, 1);circle(705, 703, 1, 1);circle(1182, 802, 1, 1);circle(1736, 660, 1, 1);circle(1608, 703, 1, 1);
+    circle(1639, 1012, 1, 1);circle(1076, 982, 1, 1);circle(934, 806, 1, 1);circle(580, 827, 1, 1);circle(306, 870, 1, 1);circle(247, 765, 1, 1);
+    circle(362, 1047, 1, 1);circle(1315, 787, 1, 1);circle(1200, 900,1,1);circle(37, 1064, 1, 1);circle(38, 991, 1, 1);circle(190, 959, 1, 1);
+    circle(339, 969, 1, 1);circle(258, 1015, 1, 1);circle(184, 903, 1, 1);circle(156, 1000, 1, 1);circle(138, 1042, 1, 1);circle(532, 959, 1, 1);
+    circle(494, 858, 1, 1);circle(403, 809, 1, 1);circle(381, 899, 1, 1);circle(312, 929, 1, 1);circle(127, 866, 1, 1);circle(37, 833, 1, 1);
+    circle(109, 717, 1, 1);circle(160, 790, 1, 1);circle(315, 718, 1, 1);circle(403, 675, 1, 1);circle(523, 754, 1, 1);circle(699, 766, 1, 1);
+    circle(621, 727, 1, 1);circle(597, 911, 1, 1);circle(627, 995, 1, 1);circle(833, 1043, 1, 1);circle(1009, 1049, 1, 1);circle(1142, 988, 1, 1);
+    circle(967, 942, 1, 1);circle(955, 1018, 1, 1);circle(1332, 1004, 1, 1);circle(1475, 936, 1, 1);circle(1380, 864, 1, 1);circle(1261, 821, 1, 1);
+    circle(1155, 876, 1, 1);circle(1021, 875, 1, 1);circle(1145, 926, 1, 1);circle(1434, 973, 1, 1);circle(1559, 1046, 1, 1);circle(1921, 1079, 1, 1);
+    circle(1848, 1034, 1, 1);circle(1890, 1040, 1, 1);circle(1871, 927, 1, 1);circle(1824, 821, 1, 1);circle(1718, 736, 1, 1);circle(1610, 712, 1, 1);
+    circle(1456, 766, 1, 1);circle(1627, 846, 1, 1);circle(1705, 914, 1, 1);circle(1563, 917, 1, 1);circle(1422, 831, 1, 1);circle(1295, 772, 1, 1);
+    circle(1223, 836, 1, 1);circle(1149, 932, 1, 1);circle(1149, 994, 1, 1);circle(925, 1048, 1, 1);circle(707, 1034, 1, 1);circle(713, 935, 1, 1);
+    circle(899, 941, 1, 1);circle(811, 979, 1, 1);circle(485, 1001, 1, 1);circle(371, 1037, 1, 1);circle(65, 1043, 1, 1);circle(172, 818, 1, 1);
+    circle(297, 760, 1, 1);circle(555, 750, 1, 1);circle(445, 815, 1, 1);circle(351, 912, 1, 1);circle(475, 927, 1, 1);circle(522, 867, 1, 1);
+    circle(627, 930, 1, 1);circle(982, 885, 1, 1);circle(985, 821, 1, 1);circle(1115, 977, 1, 1);circle(1554, 1031, 1, 1);circle(1840, 1051, 1, 1);
+    circle(1453, 807, 1, 1);circle(1307, 766, 1, 1);circle(899, 772, 1, 1);circle(508, 771, 1, 1);circle(186, 733, 1, 1);
 
 
     //Moon
     glPushMatrix();
-    glTranslatef(-sun_position_x*.1,-sun_position_x*.05,0);
+    glTranslatef(-moon_position_x,-moon_position_x*.5,0);
     moon(1700, 900, 100, 100,0.61,0.98,1,0.58,0.85,1);
+    //Moon shades
     glColor3f(0.47f,0.77f,1.0f);
     anti_clock_circle(1770, 950, 8, 15, .7);
     anti_clock_circle(1660, 840, 20, 30, .7);
@@ -2941,33 +2486,22 @@ void night() {
     anti_clock_circle(1758, 865, 8, 10, -.5);
     anti_clock_circle(1620, 870, 5, 8, .7);
     anti_clock_circle(1637, 960, 3, 5, -.5);
-
-
-
-    //circle(1750, 850, 15, 20);
-
-
-
     glPopMatrix();
 
-    //0.07,0.22,0.55
+
 
     //Cloud 1
     glPushMatrix();
     glTranslatef(+cloud_position1,0,0);
 
+    //light color
     glColor3f(0.36f,0.6f,0.81f);
-    //circle(0, 1000, 25, 25);
     circle(95, 1000, 20, 20);
-    //circle(30, 1030, 30, 30);
-    //circle(25, 1015, 25, 25);
-   // circle(25, 1005, 25, 25);
     circle(65, 1027, 20, 20);
     circle(40, 1040, 20, 20);
     circle(75, 1015, 20, 20);
-    //circle(70, 1000, 20, 20);
-    //circle(50, 1000, 20, 20);
 
+    //dark color
     glColor3f(0.07f,0.22f,0.55f);
     circle(0, 1000, 25, 25);
     circle(90, 1000, 20, 20);
@@ -2979,21 +2513,19 @@ void night() {
     circle(70, 1015, 20, 20);
     circle(70, 1000, 20, 20);
     circle(50, 1000, 20, 20);
-
-
-
     glPopMatrix();
 
 
     // Cloud 2
     glPushMatrix();
     glTranslatef(+cloud_position2,0,0);
+
+    //light color
     glColor3f(0.36f,0.6f,0.81f);
-    //circle(16,880,15,15);
-    //circle(29,891,9,9);
     circle(63,890,27,27);
     circle(90,881,20,20);
 
+    //Dark color
     glColor3f(0.07f,0.22f,0.55f);
     circle(16,880,15,15);
     circle(29,891,9,9);
@@ -3013,12 +2545,13 @@ void night() {
     //cloud 3
     glPushMatrix();
     glTranslatef(-cloud_position3,0,0);
+    //light color
     glColor3f(0.07f,0.22f,0.55f);
     circle(13,817,7,7);
     circle(24,824,9,9);
     circle(40,832,12,12);
     circle(54,836,7,7);
-
+    //dark color
     glColor3f(0.36f,0.6f,0.81f);
     circle(80,842,16,16);
     circle(100,841,10,10);
@@ -3060,6 +2593,7 @@ void night() {
     //cloud 4
     glPushMatrix();
     glTranslatef(-cloud_position4,0,0);
+    //light color
     glColor3f(0.36f,0.6f,0.81f);
     circle(23, 933, 21, 21);
     circle(55, 949, 20, 20);
@@ -3068,6 +2602,7 @@ void night() {
     circle(68, 923, 21, 21);
     circle(43, 917, 17, 17);
     circle(23, 933, 22, 22);
+    //dark color
     glColor3f(0.07f,0.22f,0.55f);
     circle(23, 933, 21, 21);
     circle(50, 949, 20, 20);
@@ -3079,20 +2614,16 @@ void night() {
     glPopMatrix();
 
 
-
-
     //Plane
     glPushMatrix();
-    glTranslatef(-plane_position*4,0,0);
+    glTranslatef(-plane_position,0,0);
     glBegin(GL_POLYGON);
     glColor3f(0.12f,0.27f,0.5f);
     plane();
     glPopMatrix();
 
     //Mountain 1
-
     glColor3f(0.0f,0.11f,0.33f);
-    //glColor3f(0.0f,0.16f,0.37f);
     mountain1();
 
     //Mountain1 Shadow 1
@@ -3110,15 +2641,20 @@ void night() {
     glColor3f(0.0f,0.16f,0.37f);
     mountain2();
 
+    //Water
+    glBegin(GL_QUADS);
+    glColor3f(0.0f,0.42f,0.63f);
+    water();
+
+    //Mountain 3 front land
+    glBegin(GL_POLYGON);
+    glColor3f(0.06f,0.17f,0.37f);
+    mountain_front_land();
     //Mountain 3
     glColor3f(0.09f,0.23f,0.48f);
     mountain3();
+    glEnd();
 
-
-    //Mountain 3 front land
-     //glColor3f(0.09f,0.23f,0.48f);
-     //mountain_front_land();
-////
 
     //Tree type 1 on mountain
     tree_type1(885, 513, 65,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
@@ -3128,16 +2664,18 @@ void night() {
     tree_type1(355, 613, 40,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
     tree_type1(1650, 630, 65,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
     tree_type1(830, 737, 20,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
-    tree_type2(995, 504, 65,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
 
+    //Tree type 1 on mountain
+    tree_type2(995, 504, 65,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
     tree_type2(1528, 607, 60,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
     tree_type2(1083, 515, 67,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
     tree_type2(421, 478, 70,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
     tree_type2(731, 540, 40,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
     tree_type2(1559, 692, 20,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
     tree_type2(1216,703, 30,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
-    tree_type2(1880,100, 400,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
+    tree_type2(1142,549, 60,0.02f,0.03f,0.17f,0.0f,0.07f,0.25f,0.02f,0.02f,0.09f);
 
+    //Tree type 1 on mountain
     tree_type3(1774, 627, 70,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
     tree_type3(1600, 616, 70,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
     tree_type3(636, 489, 75,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
@@ -3149,9 +2687,7 @@ void night() {
     tree_type3(350, 468, 70,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
 
 
-
-
-    //House 1 on mountain 3////////////////////////////////////////////////////////////////////////
+    //House 1 on mountain 3(middle house)////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
     //Second flower
     glBegin(GL_POLYGON);
@@ -3171,7 +2707,7 @@ void night() {
     glVertex2f(1399, 633);glVertex2f(1412, 633);glVertex2f(1421, 624);glVertex2f(1408, 624);
     glEnd();
 
-
+    //rood lines
     glBegin(GL_LINES);
     glColor3f(0.0f,0.0f,0.2f);
     glVertex2f(1352, 624);glVertex2f(1378, 628);
@@ -3183,7 +2719,7 @@ void night() {
     glEnd();
 
 
-
+    //rood lines
     glLineWidth(4);
     glBegin(GL_LINES);
     glColor3f(0.0f,0.0f,0.2f);
@@ -3202,11 +2738,13 @@ void night() {
     glVertex2f(1378, 628);glVertex2f(1417, 624);glVertex2f(1417, 611);glVertex2f(1378, 611);
     glEnd();
 
+    //roof lines
     glLineWidth(2);
     glBegin(GL_LINES);
     glColor3f(0.0f,0.0f,0.2f);
     glVertex2f(1352, 624);glVertex2f(1378, 628);
     glVertex2f(1395, 641);glVertex2f(1408, 624);
+    glVertex2f(1378, 628);glVertex2f(1421, 624);
     glVertex2f(1378, 628);glVertex2f(1421, 624);
     glEnd();
 
@@ -3219,7 +2757,6 @@ void night() {
     // Gate's right window
     glVertex2f(1403, 620);glVertex2f(1403, 615);glVertex2f(1412, 615);glVertex2f(1412, 620);
     glEnd();
-
 
     //Left wall's left window
     glBegin(GL_QUADS);
@@ -3265,15 +2802,14 @@ void night() {
     glVertex2f(1404, 611);glVertex2f(1404, 603);
     glVertex2f(1412, 611);glVertex2f(1412, 603);
     glVertex2f(1417, 611);glVertex2f(1417, 603);
-    //glVertex2f(1421, 611);glVertex2f(1421, 603);
     glVertex2f(1374, 611);glVertex2f(1374, 603);
     glVertex2f(1367, 611);glVertex2f(1367, 606);
     glVertex2f(1361, 611);glVertex2f(1361, 607);
     glEnd();
 
-    //House 2 on mountain 3////////////////////////////////////////////////////////////////////////
+    //House 2 on mountain 3(left most house)////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
-    //second flowar
+    //second floor
     glBegin(GL_POLYGON);
     glColor3f(0.0f,0.01f,0.38f);
     glVertex2f(578, 528);glVertex2f(595, 514);glVertex2f(565, 510);glVertex2f(574, 519);
@@ -3323,6 +2859,7 @@ void night() {
     glEnd();
 
 
+    //roof lines
     glLineWidth(2);
     glColor3f(0.0f,0.0f,0.2f);
     glVertex2f(621, 510);glVertex2f(595, 514);
@@ -3391,7 +2928,7 @@ void night() {
     glEnd();
 
 
-    //House 3 on mountain 3////////////////////////////////////////////////////////////////////////
+    //House 3 on mountain 3(right most house)////////////////////////////////////////////////////////////////////////
     glLineWidth(1);
     //second floor
     glBegin(GL_POLYGON);
@@ -3404,7 +2941,7 @@ void night() {
     glColor3f(0.0f,0.42f,0.71f);
     glVertex2f(1775, 644);glVertex2f(1784, 653);glVertex2f(1818, 662);glVertex2f(1801, 648);
     glEnd();
-
+    //roof lines
     glBegin(GL_LINES);
     glColor3f(0.0f,0.0f,0.2f);
     glVertex2f(1775, 644);glVertex2f(1801, 648);
@@ -3412,7 +2949,7 @@ void night() {
     glVertex2f(1818, 661);glVertex2f(1831, 644);
     glVertex2f(1801, 648);glVertex2f(1844, 644);
     glEnd();
-
+    //roof lines
     glLineWidth(4);
     glBegin(GL_LINES);
     glColor3f(0.29f,0.16f,0.0f);
@@ -3434,7 +2971,7 @@ void night() {
     glVertex2f(1840, 631);glVertex2f(1801, 631);
     glEnd();
 
-
+    //roof lines
     glLineWidth(2);
     glBegin(GL_LINES);
     glColor3f(0.0f,0.0f,0.2f);
@@ -3466,7 +3003,7 @@ void night() {
     glVertex2f(1797, 635);glVertex2f(1793, 635);
     glEnd();
 
-
+    //railing
     glLineWidth(1);
     glBegin(GL_LINES);
     glColor3f(0.0f,0.0f,0.2f);
@@ -3510,21 +3047,16 @@ void night() {
     glEnd();
 
 
-    //Water
-    glBegin(GL_QUADS);
-    glColor3f(0.0f,0.42f,0.63f);
-    water();
+
+
 
 
     //waterfall front water shade
+    glPushMatrix();
+    glTranslatef(0,-waterfall_on_river_position,0);
     glColor3f(0.36f,0.67f,0.86f);
-    glVertex2f(1760,425);
-    circle(1742, 425, 50, 10);
-
-
-
-
-
+    circle(1765, 425, 50, 8);
+    glPopMatrix();
 
     //cell tower/////////////////////////////////////////////
 
@@ -3629,13 +3161,6 @@ void night() {
 
 
 
-
-
-/*
-
-*/
-
-
     glEnd();
 
     //Darker White part
@@ -3660,10 +3185,6 @@ void night() {
 
     glVertex2f(1893, 865);glVertex2f(1901, 878);
     glVertex2f(1901, 878);glVertex2f(1893, 891);
-
-
-
-
     glEnd();
 
 
@@ -3807,7 +3328,6 @@ void night() {
     circle(1881,908,5,8);
     circle(1906,908,5,8);
     glColor3f(0.54f,0.65f,0.88f);
-    //glColor3f(0.83f,0.83f,0.83f);
     circle(1878,908,5,8);
     circle(1909,908,5,8);
 
@@ -3873,17 +3393,17 @@ void night() {
     glVertex2f(0,0);glVertex2f(0,300);glVertex2f(1920,300);glVertex2f(1920,0);
     glEnd();
 
-    //fire sarrunding light
-
+    //fire surrounding light
     moon(680, 137, 200, 90,1,0.8,0,0.02,0.22,0.44);
     if(fire_light)moon(680, 137, 200, 90,0.96,0.77,0,0.02,0.22,0.44);
 
 
-    //Trees on mountain front
+    //Trees on mountain front(beside water fall)
     tree_type1(1700, 425, 75,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
 
     //ALL land shades
-    glColor3f(0.13f,0.45f,0.75f);
+
+    glColor3f(0.0f,0.33f,0.62f);
     land_shade();
 
 
@@ -3932,65 +3452,12 @@ void night() {
     water_shade6();
     glPopMatrix();
 
-
     //Mountain 3 front land
-     glColor3f(0.09f,0.23f,0.48f);
-     mountain_front_land();
-
-
+    glColor3f(0.09f,0.23f,0.48f);
+    mountain_front_land();
     glLineWidth(2);
-/*
-    glPushMatrix();
-    glTranslatef(-raft_position,-position_raft,0);
-    //Bamboo raft
-    glBegin(GL_POLYGON);
-    glColor3f(0.22f,0.45f,0.0f);
-    bamboo_raft();
 
-
-    //Raft vertical line
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.0f,0.0f);
-    glVertex2f(1913,330);glVertex2f(1907,348);
-    glVertex2f(1891,347);glVertex2f(1895,330);
-    glVertex2f(1870,347);glVertex2f(1874,330);
-    glVertex2f(1816,347);glVertex2f(1807,328);
-    glVertex2f(1828,329);glVertex2f(1836,346);
-    glVertex2f(1853,347);glVertex2f(1848,329);
-    glEnd();
-
-    //bamboo stick
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.0f,0.0f);
-    glVertex2f(1820,385);glVertex2f(1912,347);
-    glEnd();
-
-    //Human
-    glBegin(GL_POLYGON);
-    glColor3f(0.77f,0.63f,0.43f);
-    human();
-
-    //Head
-    glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.0f,0.0f);
-    human_head();
-
-    //Human dress
-    glBegin(GL_POLYGON);
-    glColor3f(0.35f,0.36f,0.38f);
-    human_dress();
-
-
-
-    glPopMatrix();
-*/
-
-    //Mountain 5 (River front Mountain)
-    //glColor3f(0.0f,0.6f,0.26f);
-//    mountain5();
-
-
-   //Road
+    //Road
     glBegin(GL_POLYGON);
     glColor3f(0.22f,0.18f,0.35f);
     glVertex2f(1920,0);
@@ -4011,11 +3478,11 @@ void night() {
 
 
 
-    //Tent 1______________________________________________________________
+    //Tent 1(on left)______________________________________________________________
 
     //Side shade
     glBegin(GL_POLYGON);
-    glColor3f(0.57f,0.45f,0.38f);
+    glColor3f(0.0f,0.13f,0.28f);//glColor3f(0.09f,0.29f,0.74f);//glColor3f(0.57f,0.45f,0.38f);
     glVertex2f(276,169);glVertex2f(271,207);glVertex2f(456,318);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(354,133);
     glEnd();
 
@@ -4029,31 +3496,33 @@ void night() {
 
     //Front with gate
     glBegin(GL_POLYGON);
+
+    glColor3f(0.74f, 0.46f, 0.16f);//glColor3f(0.99f,0.62f,0.25f);
+    glVertex2f(354,133);
+    glVertex2f(347,175);
     glColor3f(0.99f,0.62f,0.25f);
-    glVertex2f(354,133);glVertex2f(344,182);glVertex2f(452,314);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
-    glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);glVertex2f(455,251);
-    glVertex2f(454,251);
+    glVertex2f(452,314);
+    glVertex2f(542,187);
+    glVertex2f(526,145);
     glEnd();
 
     //roof
     glBegin(GL_POLYGON);
-    //glColor3f(0.09f,0.29f,0.74f);
     glColor3f(0.0f,0.14f,0.37f);
     glVertex2f(252,203);glVertex2f(346,317);glVertex2f(456,318);
-    //glColor3f(0.0f,0.14f,0.37f);
     glVertex2f(340,176);
     glEnd();
 
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.4f,0.24f,0.0f);
-    glVertex2f(461,141);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
+    glVertex2f(461,140);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(455,251);glVertex2f(454,251);glVertex2f(450,139);
     glEnd();
 
     //Tent anchor 1
     glBegin(GL_TRIANGLES);
-    glColor3f(0.3f,0.18f,0.0f);
+    glColor3f(0.18f,0.11f,0.0f);
     glVertex2f(290,141);glVertex2f(296,141);glVertex2f(293,119);
     glEnd();
 
@@ -4073,7 +3542,7 @@ void night() {
 
     //Tent anchor 1 rope
     glBegin(GL_LINES);
-    glColor3f(0.3f,0.18f,0.0f);
+    glColor3f(0.18f,0.11f,0.0f);
     glVertex2f(289,134);glVertex2f(340,178);
     glEnd();
 
@@ -4091,7 +3560,7 @@ void night() {
 
 
 
-    //Tent 2______________________________________________________________
+    //Tent 2(on right)______________________________________________________________
 
     //Side shade
     glBegin(GL_POLYGON);
@@ -4105,8 +3574,6 @@ void night() {
     glVertex2f(746,348);glVertex2f(651,215);glVertex2f(660,217);glVertex2f(752,348);
     glEnd();
 
-
-
     //Front with gate
     glBegin(GL_POLYGON);
     glColor3f(0.99f,0.62f,0.25f);
@@ -4118,7 +3585,6 @@ void night() {
     //roof
     glBegin(GL_POLYGON);
     glColor3f(0.09f,0.29f,0.74f);
-
     glVertex2f(950,233);glVertex2f(856,347);
     glColor3f(0.17f,0.64f,0.98f);
     glVertex2f(746,348);
@@ -4129,7 +3595,7 @@ void night() {
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.4f,0.24f,0.0f);
-    glVertex2f(741,171);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
+    glVertex2f(741,170);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
     glVertex2f(747,281);glVertex2f(748,281);glVertex2f(752,169);
     glEnd();
 
@@ -4170,14 +3636,6 @@ void night() {
     glEnd();
 
 
-    //Tree on mountain 5
-    //glBegin(GL_POLYGON);
-    //glColor3f(0.02f,0.58f,0.1f);
-    //glVertex2f(1920, 420);
-   // glColor3f(0.0f,0.42f,0.06f);
-    //tree_0n_mountain5();
-
-    //tree_type1(885, 513, 65,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
     //Big tree
     glBegin(GL_POLYGON);
     //Light color
@@ -4206,11 +3664,6 @@ void night() {
     tree_leaf4();
 
 
-    //Right side tree branch
-    //glBegin(GL_POLYGON);
-    //glColor3f(0.49,0.25,0.0f);
-    //right_tree_branch();
-
 
     //River front 3 right side trees
     tree_type1(1910,90, 450,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
@@ -4218,13 +3671,9 @@ void night() {
     tree_type3(1590, 270, 275,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
 
 
-
     glLineWidth(2);
 
     //Campfire wood
-    //glColor3f(0.96f,0.47f,0.24f);
-
-    //moon(680, 137, 100, 100,1.0,0.88,0.0,0.02,0.22,0.44);
 
     //campfire wood dark tail circle
     glColor3f(0.56f,0.33f,0.0f);
@@ -4279,25 +3728,6 @@ void night() {
     glColor3f(0.89f,0.71f,0.51f);
     circle(648, 125,4,7);
     circle(714, 125,4,7);
-/*
-    //Birds
-    glPushMatrix();
-    glTranslatef(bird_position,-bird_position*.1,0);
-    glColor3f(0.24f,0.37f,0.4f);
-    bird1(30,835);
-    bird1(50,840);
-    bird1(70,845);
-    bird1(90,860);
-    bird1(73,865);
-    bird1(63,840);
-    bird1(80,850);
-    bird1(60,870);
-    bird1(45,880);
-    bird1(37,845);
-    bird1(30,885);
-    bird1(22,841);
-    glPopMatrix();
-*/
 
 
     //Moving fire 1
@@ -4332,100 +3762,13 @@ void night() {
     glPopMatrix();
 
 
-
-
-
     //Fire shade 3
     glColor3f(0.99f,0.89f,0.67f);
     fire3();
-
-/*Main  Moving fire
-
-    //Moving fire 1
-    glPushMatrix();
-    glTranslatef(0,+smoke_position1,0);
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f,0.88f,0.0f);
-    fire1();
-    glPopMatrix();
-        //Fire shade 1
-    glColor3f(0.96f,0.47f,0.24f);
-    fire1();
-
-    //Moving fire 2
-    glPushMatrix();
-    glTranslatef(0,+smoke_position2,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.99f,0.89f,0.67f);
-    fire2();
-    glPopMatrix();
-
-        //Fire shade 2
-    glColor3f(0.98f,0.76f,0.22f);
-    fire2();
-
-    //Moving fire 3
-    glPushMatrix();
-    glTranslatef(0,+smoke_position3,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.96f,0.47f,0.24f);
-    fire3();
-    glPopMatrix();
-
-
-
-
-
-    //Fire shade 3
-    glColor3f(0.99f,0.89f,0.67f);
-    fire3();
-    */
-
-/*
-    glBegin(GL_LINES);
-    glColor3f(0.4f,0.32f,0.24f);
-    bezier_curve4(1230,0,1300,100,1400,298,1590,299);
-    glEnd();
-  */
- /*   glLineWidth(4);
-    glBegin(GL_TRIANGLES);
-    glColor3f(0.88f,0.9f,0.67f);
-    glVertex2f(1920,300);
-    glVertex2f(1920,0);
-    bezier_curve4(1230,0,1550,150,1300,280,1590,298);
-    glEnd();
-
-    glLineWidth(2);
-    glBegin(GL_POLYGON);
-    glColor3f(0.34f,0.56f,0.19f);
-    glVertex2f(1920,300);
-    glVertex2f(1920,0);
-    bezier_curve4(1600,0,1700,150,1400,250,1590,298);
-    bezier_curve3(1590,298,1700,330,1920,340);
-    glEnd();
-
-
-    glLineWidth(4);
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.f,0.0f);
-    bezier_curve3(0,0,0,1080,1920,1080);
-    glEnd();
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.f,0.0f);
-    bezier_curve4(0,0,0,1080,1920,1080,1920,0);
-    glEnd();
-
-
-
-*/
-
-
-
 
 
     glFlush(); // Render now
 }
-
 
 void sunset() {
     glClearColor(0.61f,0.95f,1.0f, 1.0f); // Set background color to black and opaque
@@ -4436,22 +3779,19 @@ void sunset() {
     glBegin(GL_POLYGON);
     glColor3f(0.84f,0.14f,0.26f);
     glVertex2f(0,1080);
-    //glColor3f(0.98f,0.66f,0.09f);
     glColor3f(1.0f,1.0f,0.0f);
     glVertex2f(0,425);
     glVertex2f(1920,425);
     glColor3f(0.84f,0.14f,0.26f);
     glVertex2f(1920,1080);
 
-    //glColor3f(0.0f,0.3f,0.63f);
-    //glVertex2f(0,425);glVertex2f(0,1080);glVertex2f(1920,1080);glVertex2f(1920,425);
     glEnd();
 
 
 
     //Sun
     glPushMatrix();
-    glTranslatef(-sun_position_x*.1,-sun_position_x*.05,0);
+    glTranslatef(-moon_position_x,-moon_position_x*.5,0);
     glColor3f(1.0f,0.93f,0.0f);
     circle(1700, 900, 100, 100);
     glPopMatrix();
@@ -4461,16 +3801,10 @@ void sunset() {
     glTranslatef(+cloud_position1,0,0);
 
     glColor3f(0.98f,0.83f,0.34f);
-    //circle(0, 1000, 25, 25);
     circle(95, 1000, 20, 20);
-    //circle(30, 1030, 30, 30);
-    //circle(25, 1015, 25, 25);
-   // circle(25, 1005, 25, 25);
     circle(65, 1027, 20, 20);
     circle(40, 1040, 20, 20);
     circle(75, 1015, 20, 20);
-    //circle(70, 1000, 20, 20);
-    //circle(50, 1000, 20, 20);
 
     glColor3f(0.93f,0.61f,0.49f);
     circle(0, 1000, 25, 25);
@@ -4585,7 +3919,7 @@ void sunset() {
 
     //Plane
     glPushMatrix();
-    glTranslatef(-plane_position*4,0,0);
+    glTranslatef(-plane_position,0,0);
     glBegin(GL_POLYGON);
     glColor3f(0.64f,0.25f,0.0f);
     plane();
@@ -4609,15 +3943,20 @@ void sunset() {
     glColor3f(0.94f,0.28f,0.23f);
     mountain2();
 
+
+    //Water
+    glBegin(GL_QUADS);
+    glColor3f(1.0f,0.56f,0.29f);
+    water();
+
+    //Mountain 3 front land
+    glBegin(GL_POLYGON);
+    glColor3f(0.6f,0.18f,0.11f);
+    mountain_front_land();
     //Mountain 3
     glColor3f(0.81,0.18f,0.25f);
     mountain3();
-
-
-    //Mountain 3 front land
-    //glColor3f(0.0f,0.6f,0.26f);
-    //mountain_front_land();
-
+    glEnd();
 
 
 
@@ -4638,7 +3977,7 @@ void sunset() {
     tree_type2(731, 540, 40,0.45f,0.15f,0.05f,0.6f,0.18f,0.11f,0.0f,0.0f,0.02f);
     tree_type2(1559, 692, 20,0.45f,0.15f,0.05f,0.6f,0.18f,0.11f,0.0f,0.0f,0.02f);
     tree_type2(1216,703, 30,0.45f,0.15f,0.05f,0.6f,0.18f,0.11f,0.0f,0.0f,0.02f);
-    tree_type2(1880,100, 400,0.45f,0.15f,0.05f,0.6f,0.18f,0.11f,0.0f,0.0f,0.02f);
+    tree_type2(1142,549, 60,0.45f,0.15f,0.05f,0.6f,0.18f,0.11f,0.0f,0.0f,0.02f);
 
     tree_type3(1774, 627, 70,0.6f,0.18f,0.11f,0.45f,0.15f,0.05f,0.0f,0.0f,0.02f);
     tree_type3(1600, 616, 70,0.6f,0.18f,0.11f,0.45f,0.15f,0.05f,0.0f,0.0f,0.02f);
@@ -4812,13 +4151,13 @@ void sunset() {
 
     //left wall
     glBegin(GL_QUADS);
-    glColor3f(0.49f,0.29f,0.06f);
+    glColor3f(0.73f,0.47f,0.11f);//glColor3f(0.49f,0.29f,0.06f);
     glVertex2f(617, 510);glVertex2f(595, 514);glVertex2f(595, 497);glVertex2f(617, 497);
     glEnd();
 
     //right wall
     glBegin(GL_QUADS);
-    glColor3f(0.73f,0.47f,0.11f);
+    glColor3f(0.49f,0.29f,0.06f);//glColor3f(0.73f,0.47f,0.11f);
     glVertex2f(595, 514);glVertex2f(556, 510);glVertex2f(556, 497);glVertex2f(595, 497);
     glEnd();
 
@@ -5011,16 +4350,15 @@ void sunset() {
     glEnd();
 
 
-    //Water
-    glBegin(GL_QUADS);
-    glColor3f(1.0f,0.56f,0.29f);
-    water();
+
 
 
     //waterfall front water shade
+    glPushMatrix();
+    glTranslatef(0,-waterfall_on_river_position,0);
     glColor3f(0.84f,0.41f,0.18f);
-    glVertex2f(1760,425);
-    circle(1742, 425, 50, 10);
+    circle(1765, 425, 50, 8);
+    glPopMatrix();
 
     //cell tower/////////////////////////////////////////////
     //tower light
@@ -5518,7 +4856,7 @@ void sunset() {
 
     //Side shade
     glBegin(GL_POLYGON);
-    glColor3f(0.45f,0.11f,0.07f);
+    glColor3f(0.37f,0.14f,0.14f);//glColor3f(0.45f,0.11f,0.07f);
     glVertex2f(276,169);glVertex2f(271,207);glVertex2f(456,318);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(354,133);
     glEnd();
 
@@ -5530,14 +4868,14 @@ void sunset() {
 
     //roof
     glBegin(GL_POLYGON);
-    glColor3f(0.75f,0.34f,0.05f);
+    glColor3f(0.45f,0.11f,0.07f);//glColor3f(0.75f,0.34f,0.05f);
     glVertex2f(252,203);glVertex2f(346,317);glVertex2f(456,318);glVertex2f(343,177);
     glEnd();
 
     //Front with gate
     glBegin(GL_POLYGON);
     glColor3f(0.65f,0.19f,0.09f);
-    glVertex2f(354,133);glVertex2f(347,175);glVertex2f(478,278);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
+    glVertex2f(354,133);glVertex2f(344,182);glVertex2f(452,314);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
     glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(454,251);
     glEnd();
@@ -5545,7 +4883,7 @@ void sunset() {
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.37f,0.14f,0.14f);
-    glVertex2f(461,141);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
+    glVertex2f(461,140);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(455,251);glVertex2f(454,251);glVertex2f(450,139);
     glEnd();
 
@@ -5572,7 +4910,7 @@ void sunset() {
     //Tent anchor 1 rope
     glBegin(GL_LINES);
     glColor3f(0.11f,0.11f,0.11f);
-    glVertex2f(289,134);glVertex2f(342,177);
+    glVertex2f(289,134);glVertex2f(340,178);
     glEnd();
 
     //Tent anchor 2 rope
@@ -5620,7 +4958,7 @@ void sunset() {
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.37f,0.14f,0.14f);
-    glVertex2f(741,171);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
+    glVertex2f(741,170);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
     glVertex2f(747,281);glVertex2f(748,281);glVertex2f(752,169);
     glEnd();
 
@@ -5784,8 +5122,6 @@ void sunset() {
     glFlush(); // Render now
 }
 
-
-
 void thunderstorm() {
 
     glClearColor(0.61f,0.95f,1.0f, 1.0f); // Set background color to black and opaque
@@ -5804,143 +5140,37 @@ void thunderstorm() {
     glColor3f(0.0f,0.0f,0.23f);
     glVertex2f(1920,1080);
 
-    //glColor3f(0.0f,0.3f,0.63f);
-    //glVertex2f(0,425);glVertex2f(0,1080);glVertex2f(1920,1080);glVertex2f(1920,425);
     glEnd();
 
     //Stars
     glColor3f(0.61f,0.98f,1.0f);
-    circle(304, 821, 1, 1);
-    circle(356, 856, 1, 1);
-    circle(608, 817, 1, 1);
-    circle(755, 829, 1, 1);
-    circle(844, 856, 1, 1);
-    circle(869, 903, 1, 1);
-    circle(761, 929, 1, 1);
-    circle(735, 882, 1, 1);
-    circle(787, 895, 1, 1);
-    circle(619, 900, 1, 1);
-    circle(899, 823, 1, 1);
-    circle(1745, 780, 1, 1);
-    circle(1835, 833, 1, 1);
-    circle(1844, 1024, 1, 1);
-    circle(1805, 966, 1, 1);
-    circle(1515, 1019, 1, 1);
-    circle(1475, 906, 1, 1);
-    circle(1421, 818, 1, 1);
-    circle(1250, 794, 1, 1);
-    circle(879, 1025, 1, 1);
-    circle(651, 1012, 1, 1);
-    circle(431, 979, 1, 1);
-    circle(318, 1041, 1, 1);
-    circle(266, 861, 1, 1);
-    circle(61, 930, 1, 1);
-    circle(147, 954, 1, 1);
-    circle(162, 777, 1, 1);
-    circle(413, 726, 1, 1);
-    circle(772, 845, 1, 1);
-    circle(608, 845, 1, 1);
-    circle(953, 926, 1, 1);
-    circle(903, 824, 1, 1);
-    circle(705, 703, 1, 1);
-    circle(1182, 802, 1, 1);
-    circle(1736, 660, 1, 1);
-    circle(1608, 703, 1, 1);
-    circle(1639, 1012, 1, 1);
-    circle(1076, 982, 1, 1);
-    circle(934, 806, 1, 1);
-    circle(580, 827, 1, 1);
-    circle(306, 870, 1, 1);
-    circle(247, 765, 1, 1);
-    circle(362, 1047, 1, 1);
-    circle(1315, 787, 1, 1);
-    circle(1200, 900,1,1);
-    circle(37, 1064, 1, 1);
-    circle(38, 991, 1, 1);
-    circle(190, 959, 1, 1);
-    circle(339, 969, 1, 1);
-    circle(258, 1015, 1, 1);
-    circle(184, 903, 1, 1);
-    circle(156, 1000, 1, 1);
-    circle(138, 1042, 1, 1);
-    circle(532, 959, 1, 1);
-    circle(494, 858, 1, 1);
-    circle(403, 809, 1, 1);
-    circle(381, 899, 1, 1);
-    circle(312, 929, 1, 1);
-    circle(127, 866, 1, 1);
-    circle(37, 833, 1, 1);
-    circle(109, 717, 1, 1);
-    circle(160, 790, 1, 1);
-    circle(315, 718, 1, 1);
-    circle(403, 675, 1, 1);
-    circle(523, 754, 1, 1);
-    circle(699, 766, 1, 1);
-    circle(621, 727, 1, 1);
-    circle(597, 911, 1, 1);
-    circle(627, 995, 1, 1);
-    circle(833, 1043, 1, 1);
-    circle(1009, 1049, 1, 1);
-    circle(1142, 988, 1, 1);
-    circle(967, 942, 1, 1);
-    circle(955, 1018, 1, 1);
-    circle(1332, 1004, 1, 1);
-    circle(1475, 936, 1, 1);
-    circle(1380, 864, 1, 1);
-    circle(1261, 821, 1, 1);
-    circle(1155, 876, 1, 1);
-    circle(1021, 875, 1, 1);
-    circle(1145, 926, 1, 1);
-    circle(1434, 973, 1, 1);
-    circle(1559, 1046, 1, 1);
-    circle(1921, 1079, 1, 1);
-    circle(1848, 1034, 1, 1);
-    circle(1890, 1040, 1, 1);
-    circle(1871, 927, 1, 1);
-    circle(1824, 821, 1, 1);
-    circle(1718, 736, 1, 1);
-    circle(1610, 712, 1, 1);
-    circle(1456, 766, 1, 1);
-    circle(1627, 846, 1, 1);
-    circle(1705, 914, 1, 1);
-    circle(1563, 917, 1, 1);
-    circle(1422, 831, 1, 1);
-    circle(1295, 772, 1, 1);
-    circle(1223, 836, 1, 1);
-    circle(1149, 932, 1, 1);
-    circle(1149, 994, 1, 1);
-    circle(925, 1048, 1, 1);
-    circle(707, 1034, 1, 1);
-    circle(713, 935, 1, 1);
-    circle(899, 941, 1, 1);
-    circle(811, 979, 1, 1);
-    circle(485, 1001, 1, 1);
-    circle(371, 1037, 1, 1);
-    circle(65, 1043, 1, 1);
-    circle(172, 818, 1, 1);
-    circle(297, 760, 1, 1);
-    circle(555, 750, 1, 1);
-    circle(445, 815, 1, 1);
-    circle(351, 912, 1, 1);
-    circle(475, 927, 1, 1);
-    circle(522, 867, 1, 1);
-    circle(627, 930, 1, 1);
-    circle(982, 885, 1, 1);
-    circle(985, 821, 1, 1);
-    circle(1115, 977, 1, 1);
-    circle(1554, 1031, 1, 1);
-    circle(1840, 1051, 1, 1);
-    circle(1453, 807, 1, 1);
-    circle(1307, 766, 1, 1);
-    circle(899, 772, 1, 1);
-    circle(508, 771, 1, 1);
-    circle(186, 733, 1, 1);
+    circle(304, 821, 1, 1);circle(356, 856, 1, 1);circle(608, 817, 1, 1);circle(755, 829, 1, 1);circle(844, 856, 1, 1);circle(869, 903, 1, 1);
+    circle(761, 929, 1, 1);circle(735, 882, 1, 1);circle(787, 895, 1, 1);circle(619, 900, 1, 1);circle(899, 823, 1, 1);circle(1745, 780, 1, 1);
+    circle(1835, 833, 1, 1);circle(1844, 1024, 1, 1);circle(1805, 966, 1, 1);circle(1515, 1019, 1, 1);circle(1475, 906, 1, 1);circle(1421, 818, 1, 1);
+    circle(1250, 794, 1, 1);circle(879, 1025, 1, 1);circle(651, 1012, 1, 1);circle(431, 979, 1, 1);circle(318, 1041, 1, 1);circle(266, 861, 1, 1);
+    circle(61, 930, 1, 1);circle(147, 954, 1, 1);circle(162, 777, 1, 1);circle(413, 726, 1, 1);circle(772, 845, 1, 1);circle(608, 845, 1, 1);
+    circle(953, 926, 1, 1);circle(903, 824, 1, 1);circle(705, 703, 1, 1);circle(1182, 802, 1, 1);circle(1736, 660, 1, 1);circle(1608, 703, 1, 1);
+    circle(1639, 1012, 1, 1);circle(1076, 982, 1, 1);circle(934, 806, 1, 1);circle(580, 827, 1, 1);circle(306, 870, 1, 1);circle(247, 765, 1, 1);
+    circle(362, 1047, 1, 1);circle(1315, 787, 1, 1);circle(1200, 900,1,1);circle(37, 1064, 1, 1);circle(38, 991, 1, 1);circle(190, 959, 1, 1);
+    circle(339, 969, 1, 1);circle(258, 1015, 1, 1);circle(184, 903, 1, 1);circle(156, 1000, 1, 1);circle(138, 1042, 1, 1);circle(532, 959, 1, 1);
+    circle(494, 858, 1, 1);circle(403, 809, 1, 1);circle(381, 899, 1, 1);circle(312, 929, 1, 1);circle(127, 866, 1, 1);circle(37, 833, 1, 1);
+    circle(109, 717, 1, 1);circle(160, 790, 1, 1);circle(315, 718, 1, 1);circle(403, 675, 1, 1);circle(523, 754, 1, 1);circle(699, 766, 1, 1);
+    circle(621, 727, 1, 1);circle(597, 911, 1, 1);circle(627, 995, 1, 1);circle(833, 1043, 1, 1);circle(1009, 1049, 1, 1);circle(1142, 988, 1, 1);
+    circle(967, 942, 1, 1);circle(955, 1018, 1, 1);circle(1332, 1004, 1, 1);circle(1475, 936, 1, 1);circle(1380, 864, 1, 1);circle(1261, 821, 1, 1);
+    circle(1155, 876, 1, 1);circle(1021, 875, 1, 1);circle(1145, 926, 1, 1);circle(1434, 973, 1, 1);circle(1559, 1046, 1, 1);circle(1921, 1079, 1, 1);
+    circle(1848, 1034, 1, 1);circle(1890, 1040, 1, 1);circle(1871, 927, 1, 1);circle(1824, 821, 1, 1);circle(1718, 736, 1, 1);circle(1610, 712, 1, 1);
+    circle(1456, 766, 1, 1);circle(1627, 846, 1, 1);circle(1705, 914, 1, 1);circle(1563, 917, 1, 1);circle(1422, 831, 1, 1);circle(1295, 772, 1, 1);
+    circle(1223, 836, 1, 1);circle(1149, 932, 1, 1);circle(1149, 994, 1, 1);circle(925, 1048, 1, 1);circle(707, 1034, 1, 1);circle(713, 935, 1, 1);
+    circle(899, 941, 1, 1);circle(811, 979, 1, 1);circle(485, 1001, 1, 1);circle(371, 1037, 1, 1);circle(65, 1043, 1, 1);circle(172, 818, 1, 1);
+    circle(297, 760, 1, 1);circle(555, 750, 1, 1);circle(445, 815, 1, 1);circle(351, 912, 1, 1);circle(475, 927, 1, 1);circle(522, 867, 1, 1);
+    circle(627, 930, 1, 1);circle(982, 885, 1, 1);circle(985, 821, 1, 1);circle(1115, 977, 1, 1);circle(1554, 1031, 1, 1);circle(1840, 1051, 1, 1);
+    circle(1453, 807, 1, 1);circle(1307, 766, 1, 1);circle(899, 772, 1, 1);circle(508, 771, 1, 1);circle(186, 733, 1, 1);
 
 
 
     //Moon
     glPushMatrix();
-    glTranslatef(-sun_position_x*.1,-sun_position_x*.05,0);
+    glTranslatef(-moon_position_x,-moon_position_x*.5,0);
     moon(1700, 900, 100, 100,0.61,0.98,1,0.58,0.85,1);
     glColor3f(0.47f,0.77f,1.0f);
     anti_clock_circle(1770, 950, 8, 15, .7);
@@ -5951,14 +5181,8 @@ void thunderstorm() {
     anti_clock_circle(1637, 960, 3, 5, -.5);
 
 
-
-    //circle(1750, 850, 15, 20);
-
-
-
     glPopMatrix();
 
-    //0.07,0.22,0.55
 
     //Cloud 1
     glPushMatrix();
@@ -6262,27 +5486,27 @@ void thunderstorm() {
     glBegin(GL_QUADS);
     glColor3f(0.61f,0.98f,1.0f);
     glVertex2f(45,908);
-glVertex2f(23,873);
-glVertex2f(35,873);
-glVertex2f(65,909);
+    glVertex2f(23,873);
+    glVertex2f(35,873);
+    glVertex2f(65,909);
 
 
     glEnd();
 
     glBegin(GL_QUADS);
     glColor3f(0.61f,0.98f,1.0f);
-glVertex2f(44,885);
-glVertex2f(20,854);
-glVertex2f(33,854);
-glVertex2f(55,884);
+    glVertex2f(44,885);
+    glVertex2f(20,854);
+    glVertex2f(33,854);
+    glVertex2f(55,884);
 
 
     glEnd();
 
     glBegin(GL_TRIANGLES);
-glVertex2f(34,865);
-glVertex2f(11,824);
-glVertex2f(49,862);
+    glVertex2f(34,865);
+    glVertex2f(11,824);
+    glVertex2f(49,862);
     glEnd();
 
 
@@ -6311,7 +5535,7 @@ glVertex2f(49,862);
 
     //Plane
     glPushMatrix();
-    glTranslatef(-plane_position*4,0,0);
+    glTranslatef(-plane_position,0,0);
     glBegin(GL_POLYGON);
     glColor3f(0.12f,0.27f,0.5f);
     plane();
@@ -6320,13 +5544,11 @@ glVertex2f(49,862);
     //Mountain 1
 
     glColor3f(0.0f,0.11f,0.33f);
-    //glColor3f(0.0f,0.16f,0.37f);
     mountain1();
 
     if(mountain1_light)
     {
         glColor3f(0.09f,0.23f,0.48f);
-       //glColor3f(0.0f,0.16f,0.37f);
         mountain1();
     }
 
@@ -6363,15 +5585,23 @@ glVertex2f(49,862);
     glColor3f(0.0f,0.16f,0.37f);
     mountain2();
 
-    //Mountain 3
-    glColor3f(0.09f,0.23f,0.48f);
-    mountain3();
+
+    //Water
+    glBegin(GL_QUADS);
+    glColor3f(0.0f,0.42f,0.63f);
+    water();
 
 
     //Mountain 3 front land
-     //glColor3f(0.09f,0.23f,0.48f);
-     //mountain_front_land();
-////
+    glBegin(GL_POLYGON);
+    glColor3f(0.06f,0.17f,0.37f);
+    mountain_front_land();
+    //Mountain 3
+    glColor3f(0.09f,0.23f,0.48f);
+    mountain3();
+    glEnd();
+
+
 
     //Tree type 1 on mountain
     tree_type1(885, 513, 65,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
@@ -6763,16 +5993,14 @@ glVertex2f(49,862);
     glEnd();
 
 
-    //Water
-    glBegin(GL_QUADS);
-    glColor3f(0.0f,0.42f,0.63f);
-    water();
 
 
     //waterfall front water shade
+    glPushMatrix();
+    glTranslatef(0,-waterfall_on_river_position,0);
     glColor3f(0.36f,0.67f,0.86f);
-    glVertex2f(1760,425);
-    circle(1742, 425, 50, 10);
+    circle(1765, 425, 50, 8);
+    glPopMatrix();
 
 
 
@@ -7128,9 +6356,6 @@ glVertex2f(49,862);
 
     //fire sarrunding light
 
-    //moon(680, 137, 200, 90,1,0.8,0,0.02,0.22,0.44);
-    //if(fire_light)moon(680, 137, 200, 90,0.96,0.77,0,0.02,0.22,0.44);
-
 
     //Trees on mountain front
     tree_type1(1700, 425, 75,0.0f,0.07f,0.25f,0.02f,0.03f,0.17f,0.02f,0.02f,0.09f);
@@ -7192,55 +6417,6 @@ glVertex2f(49,862);
 
 
     glLineWidth(2);
-/*
-    glPushMatrix();
-    glTranslatef(-raft_position,-position_raft,0);
-    //Bamboo raft
-    glBegin(GL_POLYGON);
-    glColor3f(0.22f,0.45f,0.0f);
-    bamboo_raft();
-
-
-    //Raft vertical line
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.0f,0.0f);
-    glVertex2f(1913,330);glVertex2f(1907,348);
-    glVertex2f(1891,347);glVertex2f(1895,330);
-    glVertex2f(1870,347);glVertex2f(1874,330);
-    glVertex2f(1816,347);glVertex2f(1807,328);
-    glVertex2f(1828,329);glVertex2f(1836,346);
-    glVertex2f(1853,347);glVertex2f(1848,329);
-    glEnd();
-
-    //bamboo stick
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.0f,0.0f);
-    glVertex2f(1820,385);glVertex2f(1912,347);
-    glEnd();
-
-    //Human
-    glBegin(GL_POLYGON);
-    glColor3f(0.77f,0.63f,0.43f);
-    human();
-
-    //Head
-    glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.0f,0.0f);
-    human_head();
-
-    //Human dress
-    glBegin(GL_POLYGON);
-    glColor3f(0.35f,0.36f,0.38f);
-    human_dress();
-
-
-
-    glPopMatrix();
-*/
-
-    //Mountain 5 (River front Mountain)
-    //glColor3f(0.0f,0.6f,0.26f);
-//    mountain5();
 
 
    //Road
@@ -7268,7 +6444,7 @@ glVertex2f(49,862);
 
     //Side shade
     glBegin(GL_POLYGON);
-    glColor3f(0.06f,0.31f,0.58f);
+    glColor3f(0.0f,0.13f,0.28f);//glColor3f(0.06f,0.31f,0.58f);
     glVertex2f(276,169);glVertex2f(271,207);glVertex2f(456,318);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(354,133);
     glEnd();
 
@@ -7282,7 +6458,7 @@ glVertex2f(49,862);
 
     //Front with gate
     glBegin(GL_POLYGON);
-    glColor3f(0.21f,0.34f,0.55f);
+    glColor3f(0.06f,0.31f,0.58f);//glColor3f(0.21f,0.34f,0.55f);
     glVertex2f(354,133);glVertex2f(344,182);glVertex2f(453,314);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
     glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(454,251);
@@ -7300,7 +6476,7 @@ glVertex2f(49,862);
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.0f,0.13f,0.28f);
-    glVertex2f(461,141);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
+    glVertex2f(461,140);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(455,251);glVertex2f(454,251);glVertex2f(450,139);
     glEnd();
 
@@ -7348,7 +6524,7 @@ glVertex2f(49,862);
 
     //Side shade
     glBegin(GL_POLYGON);
-    glColor3f(0.21f,0.34f,0.55f);
+    glColor3f(0.0f,0.14f,0.37f);//glColor3f(0.06f,0.31f,0.58f);//glColor3f(0.06f,0.31f,0.58f);//glColor3f(0.21f,0.34f,0.55f);
     glVertex2f(926,199);glVertex2f(931,237);glVertex2f(746,348);glVertex2f(660,217);glVertex2f(676,175);glVertex2f(848,163);
     glEnd();
 
@@ -7362,8 +6538,8 @@ glVertex2f(49,862);
 
     //Front with gate
     glBegin(GL_POLYGON);
-    glColor3f(0.06f,0.31f,0.58f);
-    glVertex2f(848,163);glVertex2f(857,211);glVertex2f(750,344);glVertex2f(660,217);glVertex2f(676,175);glVertex2f(741,172);
+    glColor3f(0.06f,0.31f,0.58f);//glColor3f(0.21f,0.34f,0.55f);//glColor3f(0.06f,0.31f,0.58f);
+    glVertex2f(848,163);glVertex2f(855,205);glVertex2f(724,308);glVertex2f(660,217);glVertex2f(676,175);glVertex2f(741,172);
     glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);glVertex2f(747,281);
     glVertex2f(748,281);
     glEnd();
@@ -7382,7 +6558,7 @@ glVertex2f(49,862);
     //Gate
     glBegin(GL_POLYGON);
     glColor3f(0.0f,0.13f,0.28f);
-    glVertex2f(741,171);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
+    glVertex2f(741,170);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
     glVertex2f(747,281);glVertex2f(748,281);glVertex2f(752,169);
     glEnd();
 
@@ -7532,127 +6708,7 @@ glVertex2f(49,862);
     glColor3f(0.35f,0.29f,0.43f);
     circle(648, 125,4,7);
     circle(714, 125,4,7);
-/*
 
-
-    //Moving fire 1
-    glPushMatrix();
-    glTranslatef(0,+smoke_position1,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.96f,0.47f,0.24f);
-    fire1();
-    glPopMatrix();
-    //Fire shade 1
-    glColor3f(0.96f,0.47f,0.24f);
-    fire1();
-
-    //Moving fire 2
-    glPushMatrix();
-    glTranslatef(0,+smoke_position2,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.98f,0.76f,0.22f);
-    fire2();
-    glPopMatrix();
-
-        //Fire shade 2
-    glColor3f(0.98f,0.76f,0.22f);
-    fire2();
-
-    //Moving fire 3
-    glPushMatrix();
-    glTranslatef(0,+smoke_position3,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.99f,0.89f,0.67f);
-    fire3();
-    glPopMatrix();
-
-
-
-
-
-    //Fire shade 3
-    glColor3f(0.99f,0.89f,0.67f);
-    fire3();
-*/
-/*Main  Moving fire
-
-    //Moving fire 1
-    glPushMatrix();
-    glTranslatef(0,+smoke_position1,0);
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f,0.88f,0.0f);
-    fire1();
-    glPopMatrix();
-        //Fire shade 1
-    glColor3f(0.96f,0.47f,0.24f);
-    fire1();
-
-    //Moving fire 2
-    glPushMatrix();
-    glTranslatef(0,+smoke_position2,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.99f,0.89f,0.67f);
-    fire2();
-    glPopMatrix();
-
-        //Fire shade 2
-    glColor3f(0.98f,0.76f,0.22f);
-    fire2();
-
-    //Moving fire 3
-    glPushMatrix();
-    glTranslatef(0,+smoke_position3,0);
-    glBegin(GL_POLYGON);
-    glColor3f(0.96f,0.47f,0.24f);
-    fire3();
-    glPopMatrix();
-
-
-
-
-
-    //Fire shade 3
-    glColor3f(0.99f,0.89f,0.67f);
-    fire3();
-    */
-
-/*
-    glBegin(GL_LINES);
-    glColor3f(0.4f,0.32f,0.24f);
-    bezier_curve4(1230,0,1300,100,1400,298,1590,299);
-    glEnd();
-  */
- /*   glLineWidth(4);
-    glBegin(GL_TRIANGLES);
-    glColor3f(0.88f,0.9f,0.67f);
-    glVertex2f(1920,300);
-    glVertex2f(1920,0);
-    bezier_curve4(1230,0,1550,150,1300,280,1590,298);
-    glEnd();
-
-    glLineWidth(2);
-    glBegin(GL_POLYGON);
-    glColor3f(0.34f,0.56f,0.19f);
-    glVertex2f(1920,300);
-    glVertex2f(1920,0);
-    bezier_curve4(1600,0,1700,150,1400,250,1590,298);
-    bezier_curve3(1590,298,1700,330,1920,340);
-    glEnd();
-
-
-    glLineWidth(4);
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.f,0.0f);
-    bezier_curve3(0,0,0,1080,1920,1080);
-    glEnd();
-    glBegin(GL_LINES);
-    glColor3f(0.0f,0.f,0.0f);
-    bezier_curve4(0,0,0,1080,1920,1080,1920,0);
-    glEnd();
-
-
-
-*/
     float x=0, y = 0, x1= 0;
     glColor3f(0.61f,0.98f,1.0f);
     glPushMatrix();
@@ -7696,39 +6752,38 @@ glVertex2f(49,862);
     glFlush(); // Render now
 }
 
-
 void handleKeypress(unsigned char key, int x, int y) {
 
     switch (key) {
     case 'd':
+
+        sndPlaySound("day.wav",SND_ASYNC);
         glutDisplayFunc(day);
-        //PlaySound(TEXT("C:\\CG_Project\\day.wav") , NULL , SND_SYNC) ;
-        //PlaySoundA((LPCSTR) "C:\\CG_Project\\day.wav", NULL, SND_FILENAME | SND_ASYNC);
-       // getchar();
-
-        //sndPlaySound("C:\CG_Project\day.wav",SND_ASYNC);
-        //sndPlaySound("day.wav",SND_ASYNC);
-        //PlaySound("day.wav", NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);
-        //sndPlaySound("H:\\AIUB\\9th sem\\01054 - COMPUTER GRAPHICS [M]\\CGPROJECT\\music\\rain.wav",SND_ASYNC);
-
-        //C:\CG_Project
         //glutPostRedisplay();
         break;
 
     case 's':
+
+        sndPlaySound("sunset.wav",SND_ASYNC);
         glutDisplayFunc(sunset);
         break;
 
     case 'n':
+
+        sndPlaySound("night.wav",SND_ASYNC);
         glutDisplayFunc(night);
         break;
 
     case 'c':
         glutDisplayFunc(cover);
         break;
+
     case 't':
+
+        sndPlaySound("thunder.wav",SND_ASYNC);
         glutDisplayFunc(thunderstorm);
         break;
+
     case 'f':
         glutFullScreen();
         break;
@@ -7749,22 +6804,29 @@ void handleKeypress(unsigned char key, int x, int y) {
     }
 }
 
-
 /* Main function: GLUT runs as a console application starting at main() */
 int main(int argc, char ** argv) {
 
-    cout << "Press d : To Start Day mode" << endl << endl;
-    cout << "Press s : To Start Sunset mode" << endl << endl;
-    cout << "Press n : To Start Night mode" << endl << endl;
-    cout << "Press t : To Start Thunderstorm mode" << endl << endl;
-    cout << "Press c : To Go to Cover " << endl << endl;
+
+    cout << endl;
+    cout << " 01047 - COMPUTER GRAPHICS [A]" << endl;
+    cout << "   Somewhere in Bandarban" << endl;
+    cout << "       by Group- 4" <<  endl << endl;
+
+    cout << "Submitted to" << endl;
+    cout << "       MAHFUJUR RAHAMAN"<< endl;
+    cout << "       FACULTY OF SCIENCE & TECHNOLOGY" << endl;
+    cout << "       American International University-Bangladesh"<<  endl<< endl << endl;
+
+    cout << "Key Functions:" << endl << endl;
+    cout << "Press d : To Start Day Mode" << endl << endl;
+    cout << "Press s : To Start Sunset Mode" << endl << endl;
+    cout << "Press n : To Start Night Mode" << endl << endl;
+    cout << "Press t : To Start Thunderstorm Mode" << endl << endl;
+    cout << "Press c : To Go to Cover Page " << endl << endl;
     cout << "Press f : TO Expand to Full Screen " << endl << endl;
     cout << "Press l : TO Make Small Screen " << endl << endl;
-    cout << "Press r : To Restore the Screen " << endl << endl;
     cout << "Press e : To Exit " << endl << endl;
-
-
-    //for(int x=0;x<500;x++)cout << 1+ (rand() % 1920) <<"\n";
 
 
     glutInit( & argc, argv);
@@ -7772,7 +6834,7 @@ int main(int argc, char ** argv) {
     glutInitWindowPosition(0, 0); // Set the window's initial position according to the monitor
     glutCreateWindow("Somewhere in Bandarban"); // Create a window with the given title
     glOrtho(0, 1920, 0, 1080, -100, 100);
-    glutDisplayFunc(thunderstorm); // Register display callback handler for window re-paint
+    glutDisplayFunc(cover); // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypress);
     glutTimerFunc(20, update, 0);
     glutMainLoop(); // Enter the event-processing loop

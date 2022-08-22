@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1661171248 source:e:\8th semester\computer graphics [a]\project\somewhere in bandarban (cg project)\main.cpp
+1661209442 source:e:\8th semester\computer graphics [a]\project\somewhere in bandarban (cg project)\main.cpp
 	<iostream>
 	<GL/gl.h>
 	<GL/glut.h>

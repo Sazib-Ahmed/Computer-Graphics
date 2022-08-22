@@ -27,7 +27,14 @@ void renderBitmapString(float x, float y, float z, void *font, char *string) {
         glutBitmapCharacter(font, *c);
     }
 }
+bool tower_light=true;
+GLfloat counter_position=0;
+GLfloat counter_speed=1.5;
 
+
+bool fire_light=true;
+GLfloat fire_light_position=0;
+GLfloat fire_light_speed=4.5;
 
 GLfloat position = 0;
 GLfloat plane_position= 0;
@@ -47,7 +54,7 @@ GLfloat waterfall_shade_position1 = 0, waterfall_shade_position2 = 0, waterfall_
 GLfloat speed1 = 2;
 
 GLfloat smoke_position1 = 0;
-GLfloat smoke_speed1 = .4;
+GLfloat smoke_speed1 = .3;
 GLfloat smoke_position2 = 0;
 GLfloat smoke_speed2 = .5;
 GLfloat smoke_position3 = 0;
@@ -85,11 +92,11 @@ void update(int value)
     if(waterfall_shade_position3 > 50) waterfall_shade_position3 = 0;
     waterfall_shade_position3 += speed1;
 
-    if(smoke_position1 > 10) smoke_position1 = 0;
+    if(smoke_position1 > 8) smoke_position1 = 0;
     smoke_position1 += smoke_speed1;
-    if(smoke_position2 > 10) smoke_position2 = 0;
+    if(smoke_position2 > 8) smoke_position2 = 0;
     smoke_position2 += smoke_speed2;
-    if(smoke_position3 > 10) smoke_position3 = 0;
+    if(smoke_position3 > 8) smoke_position3 = 0;
     smoke_position3 += smoke_speed3;
 
 
@@ -136,10 +143,24 @@ void update(int value)
     sun_position_x += speed;
 
 
+    if(counter_position > 100){
+            counter_position = 0;
+
+    }
+    counter_position += counter_speed;
+
+    if(counter_position<50)tower_light=true;
+    if(counter_position>50)tower_light=false;
 
 
+    if(fire_light_position > 40){
+            fire_light_position = 0;
 
+    }
+    fire_light_position += fire_light_speed;
 
+    if(fire_light_position<20)fire_light=true;
+    if(fire_light_position>20)fire_light=false;
 
 
     glutPostRedisplay();
@@ -2168,6 +2189,14 @@ void day() {
     circle(1878,908,5,8);
     circle(1909,908,5,8);
 
+    //Light
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    glColor3f(0.93f,0.32f,0.18f);
+    glVertex2f(1899,917);
+    glVertex2f(1899,920);
+    glEnd();
+
 
 
     //Mountain 4
@@ -3056,7 +3085,7 @@ void night() {
 
     //left side roof
     glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.42f,0.71f);
+    glColor3f(0.0f,0.27f,0.59f);
     glVertex2f(1352, 624);glVertex2f(1361, 633);glVertex2f(1395, 642);glVertex2f(1378, 628);
     glEnd();
 
@@ -3170,19 +3199,20 @@ void night() {
     glLineWidth(1);
     //second flowar
     glBegin(GL_POLYGON);
-    glColor3f(0.21f,0.34f,0.55f);
+    glColor3f(0.0f,0.01f,0.38f);
     glVertex2f(578, 528);glVertex2f(595, 514);glVertex2f(565, 510);glVertex2f(574, 519);
     glEnd();
 
-    //left side roof
+
+    //Right side roof
     glBegin(GL_POLYGON);
     glColor3f(0.0f,0.42f,0.71f);
     glVertex2f(621, 510);glVertex2f(612, 519);glVertex2f(578, 528);glVertex2f(595, 514);
     glEnd();
 
-    //Right side roof
+    //left side roof
     glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.42f,0.71f);
+    glColor3f(0.0f,0.27f,0.59f);
     glVertex2f(574, 519);glVertex2f(561, 519);glVertex2f(552, 510);glVertex2f(565, 510);
     glEnd();
 
@@ -3206,13 +3236,13 @@ void night() {
 
     //right wall
     glBegin(GL_QUADS);
-    glColor3f(0.0f,0.01f,0.38f);
+    glColor3f(0.21f,0.34f,0.55f);
     glVertex2f(617, 510);glVertex2f(595, 514);glVertex2f(595, 497);glVertex2f(617, 497);
     glEnd();
 
     //left wall
     glBegin(GL_QUADS);
-    glColor3f(0.21f,0.34f,0.55f);
+    glColor3f(0.0f,0.01f,0.38f);
     glVertex2f(595, 514);glVertex2f(556, 510);glVertex2f(556, 497);glVertex2f(595, 497);
     glEnd();
 
@@ -3415,16 +3445,22 @@ void night() {
     glVertex2f(1760,425);
     circle(1742, 425, 50, 10);
 
+
+
+
+
+
     //cell tower/////////////////////////////////////////////
+
     //Middle white line
     glLineWidth(2);
     glBegin(GL_LINES);
-    glColor3f(0.8f,0.8f,0.8f);
+    glColor3f(0.31f,0.41f,0.64f);
     glVertex2f(1893, 917);glVertex2f(1893, 685);
 
     //Middle red line
     glBegin(GL_LINES);
-    glColor3f(0.93f,0.27f,0.12f);
+    glColor3f(0.0f,0.0f,0.29f);
     glVertex2f(1893, 737);glVertex2f(1893, 788);
     glVertex2f(1893, 840);glVertex2f(1893, 865);
     glVertex2f(1893, 891);glVertex2f(1893, 917);
@@ -3433,7 +3469,7 @@ void night() {
     // white Part
     glLineWidth(1);
     glBegin(GL_LINES);
-    glColor3f(0.77f,0.77f,0.77f);
+    glColor3f(0.28f,0.37f,0.56f);
     glVertex2f(1893, 927);glVertex2f(1893, 917);
     //1
     glVertex2f(1868, 685);glVertex2f(1874, 737);
@@ -3528,7 +3564,7 @@ void night() {
 
     //Darker White part
     glBegin(GL_LINES);
-    glColor3f(0.6f,0.6f,0.6f);
+    glColor3f(0.23f,0.31f,0.48);
     //1
     glVertex2f(1893, 685);glVertex2f(1871, 711);
     glVertex2f(1871, 711);glVertex2f(1893, 737);
@@ -3558,7 +3594,7 @@ void night() {
     //Red part
     glLineWidth(1);
     glBegin(GL_LINES);
-    glColor3f(0.93f,0.32f,0.18f);
+    glColor3f(0.0f,0.0f,0.29f);
     //2
     glVertex2f(1874, 737);glVertex2f(1875, 750);
     glVertex2f(1875, 750);glVertex2f(1876, 763);
@@ -3651,7 +3687,8 @@ void night() {
 
     glVertex2f(1887, 917);glVertex2f(1893, 917);
     glVertex2f(1893, 917);glVertex2f(1901, 917);
-    glEnd();
+
+
 
 
 
@@ -3678,10 +3715,10 @@ void night() {
     //cell tower long drum
     glLineWidth(3);
     glBegin(GL_LINES);
-    glColor3f(0.83f,0.83f,0.83f);
+    glColor3f(0.54f,0.65f,0.88f);
     glVertex2f(1880, 880);glVertex2f(1880, 896);
     glVertex2f(1908, 880);glVertex2f(1908, 896);
-    glColor3f(0.59f,0.59f,0.59f);
+    glColor3f(0.38f,0.49f,0.75f);
     glVertex2f(1882, 880);glVertex2f(1882, 896);
     glVertex2f(1906, 880);glVertex2f(1906, 896);
     glVertex2f(1893, 880);glVertex2f(1893, 896);
@@ -3690,12 +3727,23 @@ void night() {
 
 
     //cell tower drum
-    glColor3f(0.59f,0.59f,0.59f);
+    glColor3f(0.24f,0.43f,0.73f);
     circle(1881,908,5,8);
     circle(1906,908,5,8);
-    glColor3f(0.83f,0.83f,0.83f);
+    glColor3f(0.54f,0.65f,0.88f);
+    //glColor3f(0.83f,0.83f,0.83f);
     circle(1878,908,5,8);
     circle(1909,908,5,8);
+
+    //light
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glColor3f(0.0f,0.0f,0.29f);
+    glVertex2f(1899,917);
+    glVertex2f(1899,920);
+    glEnd();
+
+    if(tower_light)moon(1899,919,6,6,1.0,0.0,0.0,0,0.1,0.35);
 
 
 
@@ -3749,7 +3797,10 @@ void night() {
     glVertex2f(0,0);glVertex2f(0,300);glVertex2f(1920,300);glVertex2f(1920,0);
     glEnd();
 
-    moon(680, 137, 200, 90,1.0,0.88,0.0,0.02,0.22,0.44);
+    //fire sarrunding light
+
+    moon(680, 137, 200, 90,1,0.8,0,0.02,0.22,0.44);
+    if(fire_light)moon(680, 137, 200, 90,0.96,0.77,0,0.02,0.22,0.44);
 
 
     //Trees on mountain front
@@ -3898,38 +3949,41 @@ void night() {
     glVertex2f(456,318);glVertex2f(551,185);glVertex2f(542,187);glVertex2f(450,318);
     glEnd();
 
-    //roof
-    glBegin(GL_POLYGON);
-    glColor3f(0.09f,0.29f,0.74f);
-    glVertex2f(252,203);glVertex2f(346,317);glVertex2f(456,318);
-    glColor3f(0.0f,0.14f,0.37f);
-    glVertex2f(343,177);
-    glEnd();
+
 
     //Front with gate
     glBegin(GL_POLYGON);
     glColor3f(0.99f,0.62f,0.25f);
-    glVertex2f(354,133);glVertex2f(347,175);glVertex2f(478,278);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
+    glVertex2f(354,133);glVertex2f(344,182);glVertex2f(452,314);glVertex2f(542,187);glVertex2f(526,145);glVertex2f(461,142);
     glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(454,251);
     glEnd();
 
+    //roof
+    glBegin(GL_POLYGON);
+    //glColor3f(0.09f,0.29f,0.74f);
+    glColor3f(0.0f,0.14f,0.37f);
+    glVertex2f(252,203);glVertex2f(346,317);glVertex2f(456,318);
+    //glColor3f(0.0f,0.14f,0.37f);
+    glVertex2f(340,176);
+    glEnd();
+
     //Gate
     glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.09f,0.23f);
+    glColor3f(0.4f,0.24f,0.0f);
     glVertex2f(461,141);glVertex2f(457,251);glVertex2f(456,251);glVertex2f(456,251);glVertex2f(455,251);glVertex2f(455,251);
     glVertex2f(455,251);glVertex2f(454,251);glVertex2f(450,139);
     glEnd();
 
     //Tent anchor 1
     glBegin(GL_TRIANGLES);
-    glColor3f(0.58f,0.3f,0.0f);
+    glColor3f(0.3f,0.18f,0.0f);
     glVertex2f(290,141);glVertex2f(296,141);glVertex2f(293,119);
     glEnd();
 
     //Tent anchor 2
     glBegin(GL_TRIANGLES);
-    glColor3f(0.58f,0.3f,0.0f);
+    glColor3f(0.0f,0.06f,0.22f);
     glVertex2f(221,192);glVertex2f(228,192);glVertex2f(225,174);
     glEnd();
 
@@ -3943,13 +3997,13 @@ void night() {
 
     //Tent anchor 1 rope
     glBegin(GL_LINES);
-    glColor3f(0.49,0.25,0.0f);
-    glVertex2f(289,134);glVertex2f(342,177);
+    glColor3f(0.3f,0.18f,0.0f);
+    glVertex2f(289,134);glVertex2f(340,178);
     glEnd();
 
     //Tent anchor 2 rope
     glBegin(GL_LINES);
-    glColor3f(0.49,0.25,0.0f);
+    glColor3f(0.0f,0.06f,0.22f);
     glVertex2f(220,184);glVertex2f(253,204);
     glEnd();
 
@@ -3975,9 +4029,20 @@ void night() {
     glVertex2f(746,348);glVertex2f(651,215);glVertex2f(660,217);glVertex2f(752,348);
     glEnd();
 
+
+
+    //Front with gate
+    glBegin(GL_POLYGON);
+    glColor3f(0.99f,0.62f,0.25f);
+    glVertex2f(848,163);glVertex2f(857,211);glVertex2f(750,344);glVertex2f(660,217);glVertex2f(676,175);glVertex2f(741,172);
+    glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);glVertex2f(747,281);
+    glVertex2f(748,281);
+    glEnd();
+
     //roof
     glBegin(GL_POLYGON);
     glColor3f(0.09f,0.29f,0.74f);
+
     glVertex2f(950,233);glVertex2f(856,347);
     glColor3f(0.17f,0.64f,0.98f);
     glVertex2f(746,348);
@@ -3985,30 +4050,22 @@ void night() {
     glVertex2f(859,207);
     glEnd();
 
-    //Front with gate
-    glBegin(GL_POLYGON);
-    glColor3f(0.99f,0.62f,0.25f);
-    glVertex2f(848,163);glVertex2f(855,205);glVertex2f(724,308);glVertex2f(660,217);glVertex2f(676,175);glVertex2f(741,172);
-    glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);glVertex2f(747,281);
-    glVertex2f(748,281);
-    glEnd();
-
     //Gate
     glBegin(GL_POLYGON);
-    glColor3f(0.0f,0.09f,0.23f);
+    glColor3f(0.4f,0.24f,0.0f);
     glVertex2f(741,171);glVertex2f(745,281);glVertex2f(746,281);glVertex2f(746,281);glVertex2f(747,281);glVertex2f(747,281);
     glVertex2f(747,281);glVertex2f(748,281);glVertex2f(752,169);
     glEnd();
 
     //Tent anchor 1
     glBegin(GL_TRIANGLES);
-    glColor3f(0.58f,0.3f,0.0f);
+    glColor3f(0.3f,0.18f,0.0f);
     glVertex2f(912,171);glVertex2f(906,171);glVertex2f(909,149);
     glEnd();
 
     //Tent anchor 2
     glBegin(GL_TRIANGLES);
-    glColor3f(0.58f,0.3f,0.0f);
+    glColor3f(0.0f,0.06f,0.22f);
     glVertex2f(981,222);glVertex2f(974,222);glVertex2f(977,204);
     glEnd();
 
@@ -4020,13 +4077,13 @@ void night() {
 
     //Tent anchor 1 rope
     glBegin(GL_LINES);
-    glColor3f(0.49,0.25,0.0f);
+    glColor3f(0.3f,0.18f,0.0f);
     glVertex2f(913,164);glVertex2f(860,207);
     glEnd();
 
     //Tent anchor 2 rope
     glBegin(GL_LINES);
-    glColor3f(0.49,0.25,0.0f);
+    glColor3f(0.0f,0.06f,0.22f);
     glVertex2f(982,214);glVertex2f(949,234);
     glEnd();
 
@@ -4060,10 +4117,10 @@ void night() {
 
     //Big tree leaf
     glBegin(GL_POLYGON);
-    glColor3f(0.03f,0.04f,0.51f);
+    glColor3f(0.0f,0.05f,0.24f);
     tree_leaf1();
     glBegin(GL_POLYGON);
-    glColor3f(0.01f,0.02f,0.38f);
+    glColor3f(0.0f,0.07f,0.28f);
     tree_leaf2();
     glBegin(GL_POLYGON);
     glColor3f(0.02f,0.03f,0.17f);
@@ -4167,7 +4224,46 @@ void night() {
 */
 
 
+    //Moving fire 1
+    glPushMatrix();
+    glTranslatef(0,+smoke_position1,0);
+    glBegin(GL_POLYGON);
+    glColor3f(0.96f,0.47f,0.24f);
+    fire1();
+    glPopMatrix();
+    //Fire shade 1
+    glColor3f(0.96f,0.47f,0.24f);
+    fire1();
 
+    //Moving fire 2
+    glPushMatrix();
+    glTranslatef(0,+smoke_position2,0);
+    glBegin(GL_POLYGON);
+    glColor3f(0.98f,0.76f,0.22f);
+    fire2();
+    glPopMatrix();
+
+        //Fire shade 2
+    glColor3f(0.98f,0.76f,0.22f);
+    fire2();
+
+    //Moving fire 3
+    glPushMatrix();
+    glTranslatef(0,+smoke_position3,0);
+    glBegin(GL_POLYGON);
+    glColor3f(0.99f,0.89f,0.67f);
+    fire3();
+    glPopMatrix();
+
+
+
+
+
+    //Fire shade 3
+    glColor3f(0.99f,0.89f,0.67f);
+    fire3();
+
+/*Main  Moving fire
 
     //Moving fire 1
     glPushMatrix();
@@ -4207,6 +4303,7 @@ void night() {
     //Fire shade 3
     glColor3f(0.99f,0.89f,0.67f);
     fire3();
+    */
 
 /*
     glBegin(GL_LINES);
@@ -4414,7 +4511,7 @@ void sunset() {
     glPushMatrix();
     glTranslatef(-plane_position*4,0,0);
     glBegin(GL_POLYGON);
-    glColor3f(0.42f,0.63f,0.72f);
+    glColor3f(0.64f,0.25f,0.0f);
     plane();
     glPopMatrix();
 
@@ -4449,7 +4546,7 @@ void sunset() {
 
 
 
-    //Tree type 1 on mountain
+    // type 1 on mountain
     tree_type1(885, 513, 65,0.6f,0.18f,0.11f,0.45f,0.15f,0.05f,0.0f,0.0f,0.02f);
     tree_type1(550, 490, 65,0.6f,0.18f,0.11f,0.45f,0.15f,0.05f,0.0f,0.0f,0.02f);
     tree_type1(1700, 425, 80,0.6f,0.18f,0.11f,0.45f,0.15f,0.05f,0.0f,0.0f,0.02f);
@@ -4850,15 +4947,17 @@ void sunset() {
     circle(1742, 425, 50, 10);
 
     //cell tower/////////////////////////////////////////////
+    //tower light
+
     //Middle white line
     glLineWidth(2);
     glBegin(GL_LINES);
-    glColor3f(0.8f,0.8f,0.8f);
+    glColor3f(0.66f,0.31f,0.0f);
     glVertex2f(1893, 917);glVertex2f(1893, 685);
 
     //Middle red line
     glBegin(GL_LINES);
-    glColor3f(0.93f,0.27f,0.12f);
+    glColor3f(0.54f,0.2f,0.0f);
     glVertex2f(1893, 737);glVertex2f(1893, 788);
     glVertex2f(1893, 840);glVertex2f(1893, 865);
     glVertex2f(1893, 891);glVertex2f(1893, 917);
@@ -4867,7 +4966,7 @@ void sunset() {
     // white Part
     glLineWidth(1);
     glBegin(GL_LINES);
-    glColor3f(0.77f,0.77f,0.77f);
+    glColor3f(0.61f,0.29f,0.0f);
     glVertex2f(1893, 927);glVertex2f(1893, 917);
     //1
     glVertex2f(1868, 685);glVertex2f(1874, 737);
@@ -4962,7 +5061,7 @@ void sunset() {
 
     //Darker White part
     glBegin(GL_LINES);
-    glColor3f(0.6f,0.6f,0.6f);
+    glColor3f(0.52f,0.24f,0.0f);
     //1
     glVertex2f(1893, 685);glVertex2f(1871, 711);
     glVertex2f(1871, 711);glVertex2f(1893, 737);
@@ -4992,7 +5091,7 @@ void sunset() {
     //Red part
     glLineWidth(1);
     glBegin(GL_LINES);
-    glColor3f(0.93f,0.32f,0.18f);
+    glColor3f(0.12f,0.05f,0.0f);
     //2
     glVertex2f(1874, 737);glVertex2f(1875, 750);
     glVertex2f(1875, 750);glVertex2f(1876, 763);
@@ -5112,10 +5211,11 @@ void sunset() {
     //cell tower long drum
     glLineWidth(3);
     glBegin(GL_LINES);
-    glColor3f(0.83f,0.83f,0.83f);
+
+    glColor3f(1.0f,0.65f,0.0f);
     glVertex2f(1880, 880);glVertex2f(1880, 896);
     glVertex2f(1908, 880);glVertex2f(1908, 896);
-    glColor3f(0.59f,0.59f,0.59f);
+    glColor3f(0.47f,0.24f,0.0f);
     glVertex2f(1882, 880);glVertex2f(1882, 896);
     glVertex2f(1906, 880);glVertex2f(1906, 896);
     glVertex2f(1893, 880);glVertex2f(1893, 896);
@@ -5124,12 +5224,23 @@ void sunset() {
 
 
     //cell tower drum
-    glColor3f(0.59f,0.59f,0.59f);
+    glColor3f(0.47f,0.24f,0.0f);
     circle(1881,908,5,8);
     circle(1906,908,5,8);
-    glColor3f(0.83f,0.83f,0.83f);
+    glColor3f(1.0f,0.65f,0.0f);
+    //glColor3f(0.84f,0.55f,0.0f);
     circle(1878,908,5,8);
     circle(1909,908,5,8);
+
+    //light
+    glLineWidth(3);
+    glBegin(GL_LINES);
+    glColor3f(0.12f,0.05f,0.0f);
+    glVertex2f(1899,917);
+    glVertex2f(1899,920);
+    glEnd();
+
+    if(tower_light)moon(1899,919,3,3,1.0,0.0,0.0,0.88,0.34,0.2);
 
 
 
